@@ -13,7 +13,7 @@ public class JdbcMain {
     }
 
     public static int mainMenu() {
-        System.out.println("로그인이 필요합니다.");
+        System.out.println("로그인이 필요합니다!");
         while(true) {
             System.out.print("[1] 회원가입 [2] 로그인 [3] 관리자 모드 [4] 종료 : ");
             int sel = sc.nextInt();
