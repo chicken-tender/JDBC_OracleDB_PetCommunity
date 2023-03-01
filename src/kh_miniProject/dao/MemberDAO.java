@@ -82,6 +82,7 @@ public class MemberDAO {
                     JdbcMain.petDiary(loginId);
                     JdbcMain.boardMenu(loginId);
                     JdbcMain.myPostPage(loginId);
+                    JdbcMain.boardSearchMenu(loginId);
                     return loginId;
                 } else {
                     match = true;

@@ -191,7 +191,7 @@ public class JdbcMain {
         System.out.println("[게시판 보기]를 선택하셨습니다.");
         System.out.println("메뉴를 선택하세요.");
         while (true) {
-            System.out.print("[1] 게시판 선택 [2] 글읽기 [3] 글쓰기 [4] 제목 검색 [5] 본문 검색 [6] 이전 단계 : ");
+            System.out.print("[1] 게시판 선택 [2] 글읽기 [3] 글쓰기 [4] 검색 [5] 이전 단계 : ");
             int sel = sc.nextInt();
             switch (sel) {
                 case 1 :
@@ -199,20 +199,43 @@ public class JdbcMain {
                     JdbcMain.wdao.viewPostList(list);
                     break;
                 case 2 :
-
                     break;
                 case 3 :
                     wdao.writePost(id);
                     break;
                 case 4 :
+                    JdbcMain.boardSearchMenu(id);
+                case 5 :
+                    JdbcMain.userMenu(id);
+            }
+        }
+    }
+
+    public static boolean boardSearchMenu(String id) {
+        System.out.println("[검색]을 선택하셨습니다.");
+        System.out.println("메뉴를 선택하세요.");
+        while(true) {
+            System.out.print("[1] 제목 검색 [2] 본문 검색 [3] 특정 기간 검색 [4] 작성자 검색 [5] 이전 단계 : ");
+            int sel = sc.nextInt();
+            switch(sel) {
+                case 1 :
                     List<WriteVO> list2 = wdao.getTitleSearchList();
                     JdbcMain.wdao.viewPostList(list2);
                     break;
-                case 5 :
+                case 2 :
                     List<WriteVO> list3 = wdao.getBodyTextSearchList();
                     JdbcMain.wdao.preViewBodyTextList(list3);
-                case 6 :
-                    JdbcMain.userMenu(id);
+                    break;
+                case 3 :
+                    List<WriteVO> list4 = wdao.getPeriodSearchList();
+                    JdbcMain.wdao.preViewBodyTextList(list4);
+                    break;
+                case 4 :
+                    List<WriteVO> list5 = wdao.getIdSearchList();
+                    JdbcMain.wdao.preViewBodyTextList(list5);
+                    break;
+                case 5 :
+                    JdbcMain.boardMenu(id);
             }
         }
     }
