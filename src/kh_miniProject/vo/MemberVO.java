@@ -1,6 +1,6 @@
 package kh_miniProject.vo;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class MemberVO {
     private String id;
@@ -9,14 +9,6 @@ public class MemberVO {
     private String mail;
     private String phone;
     private Date joinDate;
-
-    public MemberVO(String id, String pw, String name, String mail, String phone) {
-        this.id = id;
-        this.pw = pw;
-        this.name = name;
-        this.mail = mail;
-        this.phone = phone;
-    }
 
     public MemberVO(String id, String pw, String name, String mail, String phone, Date joinDate) {
         this.id = id;
@@ -27,17 +19,8 @@ public class MemberVO {
         this.joinDate = joinDate;
     }
 
-    public MemberVO(String id, String pw) {
-        this.id = id;
-        this.pw = pw;
-    }
+    public MemberVO() {
 
-    public Date getJoinDate() {
-        return joinDate;
-    }
-
-    public void setJoinDate(Date joinDate) {
-        this.joinDate = joinDate;
     }
 
     public String getId() {
@@ -78,5 +61,13 @@ public class MemberVO {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Date getJoinDate() {
+        return joinDate;
+    }
+
+    public void setJoinDate(Date joinDate) {
+        this.joinDate = joinDate;
     }
 }
