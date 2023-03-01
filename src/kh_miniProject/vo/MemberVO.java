@@ -1,11 +1,14 @@
 package kh_miniProject.vo;
 
+import java.sql.Date;
+
 public class MemberVO {
     private String id;
     private String pw;
     private String name;
     private String mail;
     private String phone;
+    private Date joinDate;
 
     public MemberVO(String id, String pw, String name, String mail, String phone) {
         this.id = id;
@@ -13,6 +16,28 @@ public class MemberVO {
         this.name = name;
         this.mail = mail;
         this.phone = phone;
+    }
+
+    public MemberVO(String id, String pw, String name, String mail, String phone, Date joinDate) {
+        this.id = id;
+        this.pw = pw;
+        this.name = name;
+        this.mail = mail;
+        this.phone = phone;
+        this.joinDate = joinDate;
+    }
+
+    public MemberVO(String id, String pw) {
+        this.id = id;
+        this.pw = pw;
+    }
+
+    public Date getJoinDate() {
+        return joinDate;
+    }
+
+    public void setJoinDate(Date joinDate) {
+        this.joinDate = joinDate;
     }
 
     public String getId() {

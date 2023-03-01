@@ -25,7 +25,6 @@ public class Common {
         try {
             if(conn != null && !conn.isClosed()) {
                 conn.close();
-                System.out.println("Connection 해제 성공");
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -35,7 +34,6 @@ public class Common {
         try {
             if(stmt != null && !stmt.isClosed()) {
                 stmt.close();
-                System.out.println("Connection 해제 성공");
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -45,7 +43,6 @@ public class Common {
         try {
             if(rSet != null && !rSet.isClosed()) {
                 rSet.close();
-                System.out.println("Connection 해제 성공");
             }
         } catch(Exception e) {
             e.printStackTrace();

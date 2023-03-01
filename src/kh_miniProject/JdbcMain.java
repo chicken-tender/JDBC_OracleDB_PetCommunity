@@ -1,26 +1,37 @@
 package kh_miniProject;
 import kh_miniProject.dao.MemberDAO;
+import kh_miniProject.dao.WriteDAO;
+import kh_miniProject.vo.MemberVO;
+import kh_miniProject.vo.WriteVO;
+import java.util.List;
 import java.util.Scanner;
-
 public class JdbcMain {
     static Scanner sc = new Scanner(System.in);
-    static MemberDAO dao = new MemberDAO();
+    static MemberDAO mdao = new MemberDAO();
+    static WriteDAO wdao = new WriteDAO();
     public static void main(String[] args) {
+//        List<WriteVO> w = wdao.getPeriodSearchList();
+//        Practice.wdao.preViewBodyTextList(w);
         System.out.println("[고양이 집사 커뮤니티]");
-        int rst = kh_miniProject.JdbcMain.mainMenu();
-        if(rst == 1) kh_miniProject.JdbcMain.userMenu();
-        else kh_miniProject.JdbcMain.adminMenu();
+        int rst = JdbcMain.mainMenu();
+        if(rst == 1) {
+            List<MemberVO> mlist = JdbcMain.mdao.getLogInInfo();
+            String loginUser = JdbcMain.mdao.login(mlist);
+            JdbcMain.userMenu(loginUser);
+        }
+        else JdbcMain.adminMenu();
     }
 
     public static int mainMenu() {
-        System.out.println("로그인이 필요합니다!");
         while(true) {
             System.out.print("[1] 회원가입 [2] 로그인 [3] 관리자 모드 [4] 종료 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
-                    dao.signUp();
+                    mdao.signUp();
                 case 2 :
+                    List<MemberVO> m = mdao.getLogInInfo();
+                    JdbcMain.mdao.login(m);
                     return 1;
                 case 3 :
                     System.out.print("비밀번호를 입력하세요. : ");
@@ -32,30 +43,31 @@ public class JdbcMain {
         }
     }
 
-    public static boolean userMenu() {
-        System.out.println("환영합니다. 메뉴를 선택하세요.");
+    public static boolean userMenu(String id) {
+        System.out.println("로그인이 완료되었습니다.");
+        System.out.println("메뉴를 선택하세요.");
         while(true) {
             System.out.print("[1] 마이페이지 [2] 펫 페이지 [3] 게시판 보기 [4] 종료 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
-                    kh_miniProject.JdbcMain.myPage();
+                    JdbcMain.myPage(id);
                 case 2 :
-                    kh_miniProject.JdbcMain.petMenu();
+                    JdbcMain.petMenu(id);
                 case 3 :
-                    kh_miniProject.JdbcMain.boardMenu();
+                    JdbcMain.boardMenu(id);
                 case 4 :
                     System.exit(0);
             }
         }
     }
 
-    public static boolean myPage() {
-        System.out.println("[닉네임] 님의 마이 페이지"); // [닉네임] 코드 수정 예정
+    public static boolean myPage(String id) {
+        System.out.println("[" + id + "] 님의 마이 페이지");
         System.out.println("메뉴를 선택하세요.");
         while (true) {
-            System.out.print("[1] 내 정보 [2] 정보 수정 [3] 내가 쓴 글 확인 [4] 내가 쓴 댓글 확인 " +
-                    "[5] 내가 쓴 글에 달린 댓글 확인 [6] 이전 단계 [7] 종료 : ");
+            System.out.print("[1] 내 정보 [2] 정보 수정 [3] 내가 쓴 글 확인 [4] 내가 쓴 댓글 " +
+                    "[5] 내가 쓴 글에 달린 댓글 [6] 이전 단계 [7] 종료 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
@@ -63,41 +75,64 @@ public class JdbcMain {
                 case 2 :
                     break;
                 case 3 :
-                    break;
+                    JdbcMain.myPostPage(id);
                 case 4 :
                     break;
                 case 5 :
                     break;
                 case 6 :
-                    kh_miniProject.JdbcMain.userMenu();
+                    JdbcMain.userMenu(id);
                 case 7 :
                     System.exit(0);
             }
         }
     }
 
-    public static boolean petMenu () {
-        System.out.println("[닉네임] 님의 펫 페이지"); // 닉네임 부분은 추후 수정 예정
+    public static boolean myPostPage(String id) {
+        System.out.println("[" + id + "] 님의 작성글");
+        List<WriteVO> list = wdao.getMyPostList(id);
+        JdbcMain.wdao.viewPost(list);
+        while(true) {
+            System.out.print("[1] 제목 수정 [2] 본문 수정 [3] 삭제 [4] 이전 단계 : ");
+            int sel = sc.nextInt();
+            switch(sel) {
+                case 1 :
+                    wdao.editMyPostTitle(id);
+                    break;
+                case 2 :
+                    wdao.editMyPostBodyText(id);
+                    break;
+                case 3 :
+                    wdao.deleteMyPost(id);
+                    break;
+                case 4 :
+                    JdbcMain.myPage(id);
+            }
+        }
+    }
+
+    public static boolean petMenu (String id) {
+        System.out.println("[" + id + "] 님의 펫 페이지");
         System.out.println("메뉴를 선택하세요.");
         while(true) {
             System.out.print("[1] 반려묘 정보 조회 [2] 반려묘 추가 [3] 반려묘 정보 수정 [4] 이전 단계 [5] 종료 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
-                    kh_miniProject.JdbcMain.petInfoInquire();
+                    JdbcMain.petInfoInquire(id);
                 case 2 :
                     break;
                 case 3 :
                     break;
                 case 4 :
-                    kh_miniProject.JdbcMain.userMenu();
+                    JdbcMain.userMenu(id);
                 case 5 :
                     System.exit(0);
             }
         }
     }
 
-    public static boolean petInfoInquire() { // 반려묘 정보 조회
+    public static boolean petInfoInquire(String id) { // 반려묘 정보 조회
         System.out.println("[반려묘 정보 조회]");
         System.out.println("메뉴를 선택하세요.");
         while(true) {
@@ -109,12 +144,12 @@ public class JdbcMain {
                 case 2 :
                     break;
                 case 3 :
-                    kh_miniProject.JdbcMain.petMenu();
+                    JdbcMain.petMenu(id);
             }
         }
     }
 
-    public static boolean petInfoQuery() { // 반려묘 정보 확인
+    public static boolean petInfoQuery(String id) { // 반려묘 정보 확인
         System.out.println("[반려묘 정보 확인]");
         System.out.println("메뉴를 선택하세요.");
         while(true) {
@@ -128,12 +163,12 @@ public class JdbcMain {
                 case 3 :
                     break;
                 case 4 :
-                    kh_miniProject.JdbcMain.petInfoInquire();
+                    JdbcMain.petInfoInquire(id);
             }
         }
     }
 
-    public static boolean petDiary() { // 반려묘 일지 확인
+    public static boolean petDiary(String id) { // 반려묘 일지 확인
         System.out.println("[반려묘 일지 확인]");
         System.out.println("메뉴를 선택하세요.");
         while(true) {
@@ -145,28 +180,39 @@ public class JdbcMain {
                 case 2 :
                     break;
                 case 3 :
-                    kh_miniProject.JdbcMain.petInfoQuery();
+                    JdbcMain.petInfoQuery(id);
                 case 4 :
                     System.exit(0);
             }
         }
     }
 
-    public static boolean boardMenu() {
+    public static boolean boardMenu(String id) {
         System.out.println("[게시판 보기]를 선택하셨습니다.");
         System.out.println("메뉴를 선택하세요.");
         while (true) {
-            System.out.print("[1] 게시판 선택 [2] 게시글 작성 [3] 게시글 조회 [4] 이전 단계 : ");
+            System.out.print("[1] 게시판 선택 [2] 글읽기 [3] 글쓰기 [4] 제목 검색 [5] 본문 검색 [6] 이전 단계 : ");
             int sel = sc.nextInt();
             switch (sel) {
                 case 1 :
+                    List<WriteVO> list = wdao.getSelectBoardList();
+                    JdbcMain.wdao.viewPostList(list);
                     break;
                 case 2 :
+
                     break;
                 case 3 :
+                    wdao.writePost(id);
                     break;
                 case 4 :
-                    kh_miniProject.JdbcMain.userMenu();
+                    List<WriteVO> list2 = wdao.getTitleSearchList();
+                    JdbcMain.wdao.viewPostList(list2);
+                    break;
+                case 5 :
+                    List<WriteVO> list3 = wdao.getBodyTextSearchList();
+                    JdbcMain.wdao.preViewBodyTextList(list3);
+                case 6 :
+                    JdbcMain.userMenu(id);
             }
         }
     }
@@ -183,7 +229,7 @@ public class JdbcMain {
                 case 2 :
                     break;
                 case 3 :
-                    kh_miniProject.JdbcMain.mainMenu();
+                    JdbcMain.mainMenu();
             }
         }
     }
