@@ -189,7 +189,7 @@ public class ReplyDAO {
             rs = pStmt.executeQuery();
 
             while (rs.next()) {
-                String replyWrite = rs.getString("REPLY_WRITE");
+                String replyWrite = rs.getString("댓글");
                 ReplyVO vo = new ReplyVO();
                 vo.setReplyWrite(replyWrite);
                 list.add(vo);

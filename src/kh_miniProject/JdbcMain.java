@@ -302,7 +302,7 @@ public class JdbcMain {
     public static boolean replyMenu(String id) {
         System.out.println("----------------------------------------------------------------------------");
         while (true) {
-            System.out.print("[1] 댓글 작성 [2] 댓글 수정 [3] 댓글 삭제 [4] 이전 단계 : ");//일단 수정 & 삭제가 되긴 돼요!
+            System.out.print("[1] 댓글 작성 [2] 댓글 수정 [3] 댓글 삭제 [4] 이전 단계 : ");
             int sel = sc.nextInt();
             switch (sel) {
                 case 1:
