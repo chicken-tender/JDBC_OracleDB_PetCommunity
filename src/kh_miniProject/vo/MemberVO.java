@@ -19,10 +19,22 @@ public class MemberVO {
         this.joinDate = joinDate;
     }
 
+    public MemberVO(String id, String pw, String name, String mail, String phone) {
+        this.id = id;
+        this.pw = pw;
+        this.name = name;
+        this.mail = mail;
+        this.phone = phone;
+    }
+
+    public MemberVO(String id, String pw) {
+        this.id = id;
+        this.pw = pw;
+    }
+
     public MemberVO() {
 
     }
-
     public String getId() {
         return id;
     }
