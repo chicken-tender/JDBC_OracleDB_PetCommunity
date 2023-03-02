@@ -236,7 +236,7 @@ public class JdbcMain {
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
-                    break;
+                    JdbcMain.editPetDiary(id);
                 case 2 :
                     break;
                 case 3 :
