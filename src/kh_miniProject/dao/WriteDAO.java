@@ -417,7 +417,7 @@ public class WriteDAO {
         try {
             conn = Common.getConnection();
             stmt = conn.createStatement();
-            String sql = "SELECT W.BOARD_NUM, W.USER_ID, TITLE, BODY_TEXT, R.USER_ID, REPLY_WRITE " +
+            String sql = "SELECT W.BOARD_NUM, W.USER_ID, TITLE, BODY_TEXT, R.USER_ID AS R_USER_ID, REPLY_WRITE " +
                     "FROM WRITE W, REPLY R WHERE W.BOARD_NUM = R.BOARD_NUM AND W.BOARD_NUM = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, num);
@@ -429,7 +429,7 @@ public class WriteDAO {
                     String id = rs.getString("USER_ID");
                     String title = rs.getString("TITLE");
                     String bodyText = rs.getString("BODY_TEXT");
-                    String rUserId = rs.getString("USER_ID");
+                    String rUserId = rs.getString("R_USER_ID");
                     String reply = rs.getString("REPLY_WRITE");
                     WriteVO vo = new WriteVO(boardNum, id, title, bodyText, rUserId, reply);
                     list.add(vo);
