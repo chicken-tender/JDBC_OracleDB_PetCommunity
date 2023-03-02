@@ -11,8 +11,9 @@ public class WriteVO {
     private int rBoardNum;
     private String rUserId;
     private String replyWrite;
+    private int replyNum;
 
-    public WriteVO(int boardNum, String id, String title, String bodyText, String rUserId, String replyWrite) {
+    public WriteVO(int boardNum, String id, String title, String bodyText, String rUserId, String replyWrite, int replyNum) {
         this.boardNum = boardNum;
         this.title = title;
         this.bodyText = bodyText;
@@ -20,6 +21,7 @@ public class WriteVO {
         this.rBoardNum = rBoardNum;
         this.rUserId = rUserId;
         this.replyWrite = replyWrite;
+        this.replyNum = replyNum;
     }
 
     public WriteVO(int boardNum, String boardName, String title, String bodyText, Date regDate, String id) {
@@ -52,6 +54,14 @@ public class WriteVO {
         this.id = id;
         this.title = title;
         this.bodyText = bodyText;
+    }
+
+    public int getReplyNum() {
+        return replyNum;
+    }
+
+    public void setReplyNum(int replyNum) {
+        this.replyNum = replyNum;
     }
 
     public int getrBoardNum() {
