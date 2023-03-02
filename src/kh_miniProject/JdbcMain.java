@@ -176,16 +176,14 @@ public class JdbcMain {
         System.out.println("----------------------------------------------------------------------------");
         System.out.println("[반려묘 조회]를 선택하셨습니다.");
         while(true) {
-            System.out.print("[1] 전체 정보 확인 [2] 전체 일지 확인 [3] 선택 조회 [4] 이전 단계 : ");
+            System.out.print("[1] 전체 정보 확인 [2] 선택 조회 [3] 이전 단계 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
                     JdbcMain.petAllInfo(id);
                 case 2 :
-                    break;
-                case 3 :
                     JdbcMain.petSelectInfo(id);
-                case 4 :
+                case 3 :
                     JdbcMain.petMenu(id);
             }
         }
@@ -278,10 +276,17 @@ public class JdbcMain {
                 case 2 :
                     List<WriteVO> list2 = wdao.getEntireList();
                     JdbcMain.wdao.viewPostList(list2);
-                    List<WriteVO> list3 = wdao.getSelectPost();
-                    JdbcMain.wdao.viewSelectPost(list3);
-                    JdbcMain.wdao.viewReply(list3);
-                    JdbcMain.replyMenu(id);
+                    int num = wdao.selectBoardNum();
+                    List<WriteVO> list3 = wdao.getSelectPost(num);
+                    List<WriteVO> list4 = wdao.getPostExtractReply(num);
+                    if(list3 != null) {
+                        JdbcMain.wdao.viewSelectPost(list3);
+                        JdbcMain.wdao.viewReply(list3);
+                        JdbcMain.replyMenu(id);
+                    } else {
+                        JdbcMain.wdao.viewPost(list4);
+                        JdbcMain.replyMenu(id);
+                    }
                     break;
                 case 3 :
                     wdao.writePost(id);
