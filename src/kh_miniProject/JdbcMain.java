@@ -13,7 +13,7 @@ public class JdbcMain {
 //        List<WriteVO> w = wdao.getPeriodSearchList();
 //        Practice.wdao.preViewBodyTextList(w);
         System.out.println("[고양이 집사 커뮤니티]");
-        int rst = JdbcMain.mainMenu();
+        int rst = mainMenu();
         if(rst == 1) {
             List<MemberVO> mlist = JdbcMain.mdao.getLogInInfo();
             String loginUser = JdbcMain.mdao.login(mlist);
@@ -31,7 +31,7 @@ public class JdbcMain {
                     mdao.signUp();
                 case 2 :
                     List<MemberVO> m = mdao.getLogInInfo();
-                    JdbcMain.mdao.login(m);
+                    mdao.login(m);
                     return 1;
                 case 3 :
                     System.out.print("비밀번호를 입력하세요. : ");

@@ -1,4 +1,5 @@
 package kh_miniProject.dao;
+import kh_miniProject.JdbcMain;
 import kh_miniProject.util.Common;
 import kh_miniProject.vo.MemberVO;
 import kh_miniProject.vo.ReplyVO;
@@ -17,6 +18,7 @@ public class MemberDAO {
     ResultSet rs = null;
     Scanner sc = new Scanner(System.in);
     boolean isLogIn = false;
+    public String loginId = null;
 
     public void signUp() {
         System.out.println("[회원가입]");
@@ -425,5 +427,61 @@ public class MemberDAO {
             System.out.println("당신은 " + cnt + "마리의 반려 냥을 가진 집사입니다.");
         }
         System.out.println("----------------------");
+    }
+
+    // 로그인 구현
+    public String login(List<MemberVO> ml) {
+        System.out.println("[로그인]");
+        while (true) {
+            System.out.print("ID : ");
+            String id = sc.next();
+            System.out.print("PW : ");
+            String pw = sc.next();
+            boolean match = false;
+            for(MemberVO e : ml) {
+                if(e.getId().equals(id) && e.getPw().equals(pw)) {
+                    System.out.println("[로그인] 성공!!");
+                    loginId = e.getId();
+                    JdbcMain.userMenu(loginId);
+                    JdbcMain.myPage(loginId);
+                    JdbcMain.petMenu(loginId);
+                    JdbcMain.petInfoInquire(loginId);
+                    JdbcMain.petInfoQuery(loginId);
+                    JdbcMain.petDiary(loginId);
+                    JdbcMain.boardMenu(loginId);
+                    JdbcMain.myPostPage(loginId);
+                    JdbcMain.boardSearchMenu(loginId);
+                    return loginId;
+                } else {
+                    match = true;
+                }
+            }
+            if (match) {
+                System.out.println("계정정보가 일치하지 않습니다.");
+                System.out.println("다시 시도해주십시오.");
+            }
+        }
+    }
+    public List<MemberVO> getLogInInfo() {
+        List<MemberVO> list = new ArrayList<>();
+        try {
+            conn = Common.getConnection();
+            stmt = conn.createStatement();
+            String sql = "SELECT USER_ID, USER_PW FROM MEMBER";
+            rs = stmt.executeQuery(sql);
+
+            while(rs.next()) {
+                String id = rs.getString("USER_ID");
+                String pw = rs.getString("USER_PW");
+                MemberVO vo = new MemberVO(id, pw);
+                list.add(vo);
+            }
+            Common.close(rs);
+            Common.close(stmt);
+            Common.close(conn);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }
