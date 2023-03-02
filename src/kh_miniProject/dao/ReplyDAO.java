@@ -62,7 +62,7 @@ public class ReplyDAO {
 
     //2. 내가 작성한 댓글 조회
     public List<Map<String,String>> rplSelect(String id) {
-        List<Map<String,String>> list = new ArrayList<>();
+        List<Map<String,String>> list = null;
         try {
             conn = Common.getConnection();
             String sql = " SELECT W.BOARD_NUM, W.TITLE, R.REPLY_WRITE, W.REG_DATE " +
@@ -74,17 +74,20 @@ public class ReplyDAO {
             pStmt.setString(1, id);
             rs = pStmt.executeQuery();
 
-            while (rs.next()) {
-                int BOARD_NUM = rs.getInt("BOARD_NUM");
-                String TITLE = rs.getString("TITLE");
-                String REPLY_WRITE = rs.getString("REPLY_WRITE");
-                Date REG_DATE = rs.getDate("REG_DATE");
-                Map<String,String> vo = new HashMap<String,String>();
-                vo.put("BOARD_NUM",String.valueOf(BOARD_NUM));
-                vo.put("TITLE",TITLE);
-                vo.put("REPLY_WRITE",REPLY_WRITE);
-                vo.put("REG_DATE",String.valueOf(REG_DATE));
-                list.add(vo);
+            if(rs.next()) {
+                list = new ArrayList<>();
+                while (rs.next()) {
+                    int BOARD_NUM = rs.getInt("BOARD_NUM");
+                    String TITLE = rs.getString("TITLE");
+                    String REPLY_WRITE = rs.getString("REPLY_WRITE");
+                    Date REG_DATE = rs.getDate("REG_DATE");
+                    Map<String, String> vo = new HashMap<String, String>();
+                    vo.put("BOARD_NUM", String.valueOf(BOARD_NUM));
+                    vo.put("TITLE", TITLE);
+                    vo.put("REPLY_WRITE", REPLY_WRITE);
+                    vo.put("REG_DATE", String.valueOf(REG_DATE));
+                    list.add(vo);
+                }
             }
             Common.close(rs);
             Common.close(pStmt);
@@ -97,12 +100,18 @@ public class ReplyDAO {
     }
 
     public void rplSelectPrint(List<Map<String,String>> list) {
-        for(Map<String,String> e : list) {
-            System.out.println("글번호 :" + e.get("BOARD_NUM"));
-            System.out.println("제목 : " + e.get("TITLE"));
-            System.out.println("댓글 : " + e.get("REPLY_WRITE"));
-            System.out.println("게시글 작성날짜 : " + e.get("REG_DATE"));
-            System.out.println("----------------------");
+        if(list != null) {
+            for (Map<String, String> e : list) {
+                System.out.println("글번호 :" + e.get("BOARD_NUM"));
+                System.out.println("제목 : " + e.get("TITLE"));
+                System.out.println("댓글 : " + e.get("REPLY_WRITE"));
+                System.out.println("게시글 작성날짜 : " + e.get("REG_DATE"));
+                System.out.println("----------------------");
+            }
+        } else {
+            System.out.println("======================");
+            System.out.println("내가 쓴 댓글이 없습니다.");
+            System.out.println("======================");
         }
     }
 
@@ -140,7 +149,8 @@ public class ReplyDAO {
     }
 
     public String rplMyWritePrint() {
-        return "댓글이 없습니다.";
+        String comment = "===============\n댓글이 없습니다.\n===============";
+        return comment;
     }
 
     // 4. 내가 작성한 댓글 카운트
