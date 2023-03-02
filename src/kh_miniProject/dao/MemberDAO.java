@@ -68,9 +68,9 @@ public class MemberDAO {
     public List<MemberVO> memAll() {
         List<MemberVO> list = new ArrayList<>();
 
-        String sql = "SELECT *" +
-                "FROM MEMBER" +
-                "ORDER BY USER_ID";
+        String sql = " SELECT * " +
+                " FROM MEMBER " +
+                " ORDER BY USER_ID ";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
@@ -112,7 +112,7 @@ public class MemberDAO {
     public List<MemberVO> memJoinDate() {
         List<MemberVO> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM MEMBER ORDER BY JOIN_DATE";
+        String sql = " SELECT * FROM MEMBER ORDER BY JOIN_DATE ";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
@@ -151,15 +151,17 @@ public class MemberDAO {
     }
 
     // 특정 날짜 가입 인원 조회
-    public int specificJoinDateCount(String id) {
-        String sql = "SELECT JOIN_DATE, COUNT(*) FROM MEMBER GROUP BY JOIN_DATE";
+    public int specificJoinDateCount() {
+        String sql = " SELECT JOIN_DATE, COUNT(*) cnt FROM MEMBER GROUP BY JOIN_DATE ";
         int cnt = 0;
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             rs = pStmt.executeQuery(sql);
-
-            cnt = rs.getInt("cnt");
+            while (rs.next()) {
+                cnt = rs.getInt("cnt");
+                MemberVO vo = new MemberVO();
+            }
 
         }catch (Exception e) {
             e.printStackTrace();
@@ -181,13 +183,13 @@ public class MemberDAO {
         System.out.print("USER_ID : ");
         String userId = sc.next();
 
-        String sql = "SELECT * " +
-                "FROM MEMBER WHERE USER_ID = ?";
+        String sql = " SELECT * " +
+                " FROM MEMBER WHERE USER_ID = ? ";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, userId);
-            rs = pStmt.executeQuery(sql);
+            rs = pStmt.executeQuery();
 
             while (rs.next()) {
                 String id = rs.getString("USER_ID");
@@ -227,13 +229,13 @@ public class MemberDAO {
         System.out.print("핸드폰 번호 : ");
         String phone = sc.next();
 
-        String sql = "SELECT USER_ID" +
-                "FROM MEMBER WHERE PHONE = ?";
+        String sql = " SELECT USER_ID " +
+                " FROM MEMBER WHERE PHONE = ? ";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, phone);
-            rs = pStmt.executeQuery(sql);
+            rs = pStmt.executeQuery();
 
             while (rs.next()) {
                 String id = rs.getString("USER_ID");
@@ -264,13 +266,13 @@ public class MemberDAO {
         System.out.print("USER_ID : ");
         String id = sc.next();
 
-        String sql = "SELECT USER_PW" +
-                "FROM MEMBER WHERE USER_ID = ? ";
+        String sql = " SELECT USER_PW " +
+                " FROM MEMBER WHERE USER_ID = ? ";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, id);
-            rs = pStmt.executeQuery(sql);
+            rs = pStmt.executeQuery();
 
             while (rs.next()) {
                 String pw = rs.getString("USER_PW");
@@ -301,12 +303,12 @@ public class MemberDAO {
         System.out.print("USER_ID : ");
         String id = sc.next();
 
-        String sql = "SELECT JOIN_DATE FROM MEMBER WHERE USER_ID = ?";
+        String sql = " SELECT JOIN_DATE FROM MEMBER WHERE USER_ID = ? ";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, id);
-            rs = pStmt.executeQuery(sql);
+            rs = pStmt.executeQuery();
 
             while (rs.next()) {
                 Date joinDate = rs.getDate("JOIN_DATE");
@@ -331,13 +333,32 @@ public class MemberDAO {
         }
     }
 
+    // 특정 회원 삭제
+    public void memDelete() {
+        System.out.println("삭제할 아이디 입력 : ");
+        String id = sc.next();
+        String sql = " DELETE FROM MEMBER WHERE USER_ID = ? ";
+
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, id);
+            pStmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }System.out.println("회원 삭제 완료");
+        Common.close(pStmt);
+        Common.close(conn);
+    }
+
+
     /*회원*/
     // 이메일 변경
     public void emailUpdate(String id){
         System.out.print("변경할 이메일을 입력하세요. : ");
         String email = sc.next();
 
-        String sql = "UPDATE MEMBER SET EMAIL = ? WHERE USER_ID = ?";
+        String sql = " UPDATE MEMBER SET EMAIL = ? WHERE USER_ID = ? ";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
@@ -392,25 +413,23 @@ public class MemberDAO {
         Common.close(conn);
     }
 
-    // 반려동물 유무 (0마리 일 때, 예비 집사 / 1마리 이상일 때, 집사) - 오류 가능성 있음
+    // 반려동물 유무 (0마리 일 때, 예비 집사 / 1마리 이상일 때, 집사) - 수정
     public int rplSelect() {
         int cnt = 0;
-        try {
-            conn = Common.getConnection();
-            String sql = "SELECT COUNT(PET_NAME) AS cnt, M.USER_ID" +
-                    "FROM MEMBER M LEFT OUTER JOIN PET P" +
-                    "ON M.USER_ID = P.USER_ID" +
-                    "group by M.USER_ID" +
-                    "ORDER BY USER_ID;";
+        String sql = "SELECT COUNT(PET_NAME) AS cnt, M.USER_ID" +
+                " FROM MEMBER M LEFT OUTER JOIN PET P" +
+                " ON M.USER_ID = P.USER_ID" +
+                " GROUP BY M.USER_ID" +
+                " ORDER BY USER_ID";
+
+        try { conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
-            rs = pStmt.executeQuery(sql);
+            rs = pStmt.executeQuery();
 
             while (rs.next()) {
-                String id = rs.getString("USER_ID");
                 cnt = rs.getInt("cnt");
-                MemberVO vo = new MemberVO();
-                vo.setId(id);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -427,6 +446,61 @@ public class MemberDAO {
             System.out.println("당신은 " + cnt + "마리의 반려 냥을 가진 집사입니다.");
         }
         System.out.println("----------------------");
+    }
+
+    // 내 정보 조회
+    public List<MemberVO> memMY() {
+        List<MemberVO> list = new ArrayList<>();
+
+        System.out.println("내 정보 조회 : " + loginId);
+
+        String sql = "SELECT * FROM MEMBER WHERE USER_ID = ?";
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, loginId);
+            rs = pStmt.executeQuery();
+
+            while (rs.next()) {
+                String id = rs.getString("USER_ID");
+                String pw = rs.getString("USER_PW");
+                String name = rs.getString("USER_NAME");
+                String mail = rs.getString("EMAIL");
+                String phone = rs.getString("PHONE");
+                Date joinDate = rs.getDate("JOIN_DATE");
+                MemberVO vo = new MemberVO(id,pw,name,mail,phone,joinDate);
+                list.add(vo);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(rs);
+        Common.close(pStmt);
+        Common.close(conn);
+        return list;
+    }
+    /*public void memMYPrint(List<MemberVO> list) {
+        for (MemberVO e : list) {
+            System.out.println("ID : " + loginId);
+            System.out.println("비밀번호 : " + e.getPw());
+            System.out.println("이름 : " + e.getName());
+            System.out.println("메일 : " + e.getMail());
+            System.out.println("핸드폰 : " + e.getPhone());
+            System.out.println("가입 날짜 : " + e.getJoinDate());
+        }*/
+
+    public void memMYPrint(List<MemberVO> list, int cnt) {
+        for (MemberVO e : list) {
+            System.out.println("ID : " + e.getId());
+            System.out.println("비밀번호 : " + e.getPw());
+            System.out.println("이름 : " + e.getName());
+            System.out.println("메일 : " + e.getMail());
+            System.out.println("핸드폰 : " + e.getPhone());
+            System.out.println("가입 날짜 : " + e.getJoinDate());
+            System.out.println("반려묘 수 : " + cnt);
+            System.out.println("--------------------------");
+        }
     }
 
     // 로그인 구현

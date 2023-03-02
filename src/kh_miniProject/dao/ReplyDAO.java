@@ -21,7 +21,7 @@ public class ReplyDAO {
         System.out.print("게시글 제목 입력 : ");
         String title = sc.next();
 
-        String sql = "SELECT R.USER_ID, REPLY_WRITE" +
+        String sql = "SELECT R.USER_ID, REPLY_WRITE, REPLY_NUM" +
                 "FROM WRITE W JOIN REPLY R" +
                 "ON W.BOARD_NUM = R.BOARD_NUM" +
                 "WHERE TITLE = ?";
@@ -29,14 +29,16 @@ public class ReplyDAO {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1,title);
-            rs = pStmt.executeQuery(sql);
+            rs = pStmt.executeQuery();
 
             while (rs.next()) {
                 String id = rs.getString("USER_ID");
                 String replyWrite = rs.getString("REPLY_WRITE");
+                int replyNum = rs.getInt("REPLY_NUM");
                 ReplyVO vo = new ReplyVO();
                 vo.setId(id);
                 vo.setReplyWrite(replyWrite);
+                vo.setReplyNum(replyNum);
                 list.add(vo);
             }
 
@@ -51,25 +53,26 @@ public class ReplyDAO {
 
     public void rplSpecificWritePrint(List<ReplyVO> list) {
         for(ReplyVO e : list) {
+            System.out.println("댓글 번호 : " + e.getReplyNum());
             System.out.println("아이디 :" + e.getId());
             System.out.println("댓글 : " + e.getReplyWrite());
             System.out.println("----------------------");
         }
     }
 
-    //2. 내가 작성한 댓글 조회 - MemberVO 에서 가져오는 방식(임시)
-    public List<Map<String,String>> rplSelect(MemberVO user) {
+    //2. 내가 작성한 댓글 조회
+    public List<Map<String,String>> rplSelect(String id) {
         List<Map<String,String>> list = new ArrayList<>();
         try {
             conn = Common.getConnection();
-            String sql = "SELECT W.BOARD_NUM, W.TITLE, R.REPLY_WRITE, W.REG_DATE" +
-                    "FROM REPLY R JOIN WRITE W" +
-                    "ON R.BOARD_NUM = W.BOARD_NUM" +
-                    "WHERE R.USER_ID = ?" +
-                    "ORDER BY W.REG_DATE DESC";
+            String sql = " SELECT W.BOARD_NUM, W.TITLE, R.REPLY_WRITE, W.REG_DATE " +
+                    " FROM REPLY R JOIN WRITE W " +
+                    " ON R.BOARD_NUM = W.BOARD_NUM " +
+                    " WHERE R.USER_ID = ? " +
+                    " ORDER BY W.REG_DATE DESC ";
             pStmt =conn.prepareStatement(sql);
-            pStmt.setString(1, user.getId());
-            rs = pStmt.executeQuery(sql);
+            pStmt.setString(1, id);
+            rs = pStmt.executeQuery();
 
             while (rs.next()) {
                 int BOARD_NUM = rs.getInt("BOARD_NUM");
@@ -105,26 +108,28 @@ public class ReplyDAO {
 
     //3. 내가 작성한 글에 달린 댓글 확인 - String 으로 받아오는 방식
     public List<ReplyVO> rplMyWrite(String id){
-        List<ReplyVO> list = new ArrayList<>();
+        List<ReplyVO> list = null;
+        //List<ReplyVO> list = new ArrayList<>();
 
-        String sql = "SELECT REPLY_WRITE" +
-                "FROM REPLY" +
-                "WHERE BOARD_NUM = (SELECT BOARD_NUM" +
-                "FROM WRITE" +
-                "WHERE USER_ID = ?)";
+        String sql = " SELECT REPLY_WRITE " +
+                " FROM REPLY " +
+                " WHERE BOARD_NUM = (SELECT BOARD_NUM " +
+                " FROM WRITE " +
+                " WHERE USER_ID = ?) ";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1,id);
-            rs = pStmt.executeQuery(sql);
-
-            while (rs.next()) {
-                String replyWrite = rs.getString("REPLY_WRITE");
-                ReplyVO vo = new ReplyVO();
-                vo.setReplyWrite(replyWrite);
-                list.add(vo);
+            rs = pStmt.executeQuery();
+            if(rs.next()) {
+                list = new ArrayList<>();
+                while (rs.next()) {
+                    String replyWrite = rs.getString("REPLY_WRITE");
+                    ReplyVO vo = new ReplyVO();
+                    vo.setReplyWrite(replyWrite);
+                    list.add(vo);
+                }
             }
-
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -134,24 +139,21 @@ public class ReplyDAO {
         return list;
     }
 
-    public void rplMyWritePrint(List<ReplyVO> list) {
-        for(ReplyVO e : list) {
-            System.out.println("댓글 : " + e.getReplyWrite());
-            System.out.println("----------------------");
-        }
+    public String rplMyWritePrint() {
+        return "댓글이 없습니다.";
     }
 
     // 4. 내가 작성한 댓글 카운트
     public int rplMyWriteCount(String id){
-        String sql = "SELECT COUNT(*) AS cnt" +
-                "FROM REPLY" +
+        String sql = " SELECT COUNT(*) AS cnt" +
+                " FROM REPLY " +
                 "WHERE USER_ID = ?";
         int cnt = 0;
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, id);
-            rs = pStmt.executeQuery(sql);
+            rs = pStmt.executeQuery();
 
             while (rs.next()) {
                 cnt = rs.getInt("cnt");
@@ -172,19 +174,19 @@ public class ReplyDAO {
     }
 
     // 5. 특정 USER_ID가 작성한 댓글 조회
-    public List<ReplyVO> rplUserWrite(String id){
+    public List<ReplyVO> rplUserWrite(){
         List<ReplyVO> list = new ArrayList<>();
         System.out.print("USER_ID : ");
         String userId = sc.next();
 
-        String sql = "SELECT REPLY_WRITE 댓글" +
-                "FROM REPLY" +
-                "WHERE USER_ID = ?";
+        String sql = " SELECT REPLY_WRITE 댓글 " +
+                " FROM REPLY " +
+                " WHERE USER_ID = ? ";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, userId);
-            rs = pStmt.executeQuery(sql);
+            rs = pStmt.executeQuery();
 
             while (rs.next()) {
                 String replyWrite = rs.getString("REPLY_WRITE");
@@ -216,9 +218,9 @@ public class ReplyDAO {
         System.out.print("댓글 수정 : ");
         String replyEdit = sc.nextLine();
 
-        String sql = "UPDATE REPLY" +
-                "SET REPLY_WRITE = ?" +
-                "WHERE REPLY_NUM = ?";
+        String sql = " UPDATE REPLY" +
+                " SET REPLY_WRITE = ? " +
+                " WHERE REPLY_NUM = ? ";
 
         try {
             conn = Common.getConnection();
@@ -259,7 +261,7 @@ public class ReplyDAO {
     public void rplDelete() {
         System.out.println("삭제할 댓글 번호 입력 : ");
         int replyNum = sc.nextInt();
-        String sql = "DELETE FROM REPLY WHERE REPLY_NUM = ?";
+        String sql = " DELETE FROM REPLY WHERE REPLY_NUM = ? ";
 
         try {
             conn = Common.getConnection();
@@ -268,7 +270,7 @@ public class ReplyDAO {
             pStmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }System.out.println("댓글 삭제 완료");
         Common.close(pStmt);
         Common.close(conn);
     }

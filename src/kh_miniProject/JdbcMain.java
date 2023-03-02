@@ -3,10 +3,12 @@ import kh_miniProject.dao.MemberDAO;
 import kh_miniProject.dao.ReplyDAO;
 import kh_miniProject.dao.WriteDAO;
 import kh_miniProject.vo.MemberVO;
+import kh_miniProject.vo.ReplyVO;
 import kh_miniProject.vo.WriteVO;
 
 import java.net.IDN;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 public class JdbcMain {
     static Scanner sc = new Scanner(System.in);
@@ -75,14 +77,24 @@ public class JdbcMain {
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
+                    List<MemberVO> list = mdao.memMY();
+                    int cnt = mdao.rplSelect();
+                    mdao.memMYPrint(list, cnt);
                     break;
                 case 2 :
+                    JdbcMain.editMyInfo(id);
                     break;
                 case 3 :
                     JdbcMain.myPostPage(id);
                 case 4 :
+                    List<Map<String,String>> list1 = rdao.rplSelect(id);
+                    rdao.rplSelectPrint(list1);
                     break;
                 case 5 :
+                    List<ReplyVO> list2 = rdao.rplMyWrite(id);
+                    if(list2 == null) {
+                        System.out.println(rdao.rplMyWritePrint());
+                    }
                     break;
                 case 6 :
                     JdbcMain.userMenu(id);
@@ -101,10 +113,13 @@ public class JdbcMain {
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
+                    mdao.emailUpdate(id);
                     break;
                 case 2 :
+                    mdao.pwUpdate(id);
                     break;
                 case 3 :
+                    mdao.pwUpdate(id);
                     break;
                 case 4 :
                     JdbcMain.myPage(id);
@@ -282,13 +297,21 @@ public class JdbcMain {
     public static boolean replyMenu(String id) {
         System.out.println("----------------------------------------------------------------------------");
         while (true) {
-            System.out.print("[1] 댓글 작성 [2] 이전 단계 : ");
+            System.out.print("[1] 댓글 작성 [2] 댓글 수정 [3] 댓글 삭제 [4] 이전 단계 : ");//일단 수정 & 삭제가 되긴 돼요!
             int sel = sc.nextInt();
             switch (sel) {
                 case 1:
                     rdao.rplWrite(id);
+                    break;
                 case 2:
+                    rdao.editReply(id);
+                    break;
+                case 3:
+                    rdao.rplDelete();
+                    break;
+                case 4:
                     JdbcMain.boardMenu(id);
+                    break;
             }
         }
     }
@@ -332,12 +355,17 @@ public class JdbcMain {
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
+                    List<MemberVO> list = mdao.memAll();
+                    mdao.memAllPrint(list);
                     break;
                 case 2 :
                     JdbcMain.adminSelectMember();
                 case 3 :
+                    int cnt = mdao.specificJoinDateCount();
+                    mdao.specificJoinDateCountPrint(cnt);
                     break;
                 case 4 :
+                    mdao.memDelete();
                     break;
                 case 5 :
                     JdbcMain.mainMenu();
@@ -351,19 +379,28 @@ public class JdbcMain {
         System.out.println("메뉴를 선택하세요.");
         while(true) {
             System.out.print("[1] 특정 회원 전체 정보 [2] 특정 회원 가입일 [3] 특정 회원 아이디 [4] 특정 회원 비밀번호 " +
-                    "[5] 특정 회원 가입일 [6] 이전 단계 : ");
+                    "[5] 특정 회원 댓글 조회 [6] 이전 단계 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
+                    List<MemberVO> list = mdao.memSpecific();
+                    mdao.memSpecificPrint(list);
                     break;
                 case 2 :
+                    List<MemberVO> list1 = mdao.memJoinDateSpecific();
+                    mdao.memJoinDateSpecificPrint(list1);
                     break;
                 case 3 :
+                    List<MemberVO> list2 = mdao.memIDSpecific();
+                    mdao.memIDSpecificPrint(list2);
                     break;
                 case 4 :
+                    List<MemberVO> list3 = mdao.memPwSpecific();
+                    mdao.memPwSpecificPrint(list3);
                     break;
                 case 5 :
-                    break;
+                    List<ReplyVO> list4 = rdao.rplUserWrite();
+                    rdao.rplUserWritePrint(list4);
                 case 6 :
                     JdbcMain.adminMenu();
             }
