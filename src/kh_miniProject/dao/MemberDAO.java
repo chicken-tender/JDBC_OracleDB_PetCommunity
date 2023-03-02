@@ -454,6 +454,7 @@ public class MemberDAO {
                     JdbcMain.petDiary(loginId);
                     JdbcMain.boardMenu(loginId);
                     JdbcMain.boardSearchMenu(loginId);
+                    JdbcMain.editPetDiary(loginId);
                     return loginId;
                 } else {
                     match = true;

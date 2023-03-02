@@ -361,4 +361,31 @@ public class WriteDAO {
         Common.close(pstmt);
         Common.close(conn);
     }
+
+    // 게시글 선택하여 조회(댓글 포함) - 하는중
+    public List<WriteVO> viewSelectPost() {
+        List<WriteVO> list = new ArrayList<>();
+        try {
+            conn = Common.getConnection();
+            stmt = conn.createStatement();
+            String sql = "SELECT BOARD_NUM, BOARD_NAME, USER_ID, TITLE, REG_DATE FROM WRITE ORDER BY REG_DATE DESC";
+            rs = stmt.executeQuery(sql);
+
+            while(rs.next()) {
+                int boardNum = rs.getInt("BOARD_NUM");
+                String boardName = rs.getString("BOARD_NAME");
+                String id = rs.getString("USER_ID");
+                String title = rs.getString("TITLE");
+                Date date = rs.getDate("REG_DATE");
+                WriteVO vo = new WriteVO(boardNum, boardName, id, title, date);
+                list.add(vo);
+            }
+            Common.close(rs);
+            Common.close(stmt);
+            Common.close(conn);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

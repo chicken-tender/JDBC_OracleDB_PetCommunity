@@ -3,6 +3,8 @@ import kh_miniProject.dao.MemberDAO;
 import kh_miniProject.dao.WriteDAO;
 import kh_miniProject.vo.MemberVO;
 import kh_miniProject.vo.WriteVO;
+
+import java.net.IDN;
 import java.util.List;
 import java.util.Scanner;
 public class JdbcMain {
@@ -239,6 +241,23 @@ public class JdbcMain {
                     break;
                 case 3 :
                     JdbcMain.petInfoInquire(id);
+            }
+        }
+    }
+
+    public static boolean editPetDiary(String id) {
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("메뉴를 선택하세요.");
+        while(true) {
+            System.out.print("[1] 수정 [2] 삭제 [3] 이전 단계 : ");
+            int sel = sc.nextInt();
+            switch(sel) {
+                case 1 :
+                    break;
+                case 2 :
+                    break;
+                case 3 :
+                    JdbcMain.petDiary(id);
             }
         }
     }
