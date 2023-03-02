@@ -218,25 +218,25 @@ public void editPetDiary() {
     Common.close(conn);
 }
 
-// 6. 일지 삭제
-//public void DiaryDelete(String petName, String petDiary) {
-//    System.out.printf("%s 의 일지를 삭제합니다.", petDiary);
-//
-//    String sql = " DELETE FROM PET_PAGE WHERE PET_NAME =? AND PET_DIARY =?";
-//
-//    try {
-//        conn = Common.getConnection();
-//        pStmt = conn.prepareStatement(sql);
-//        pStmt.setInt(1, petName);
-//        pStmt.setInt(2, petDiary);
-//
-//        pStmt.executeUpdate();
-//    } catch (Exception e) {
-//        e.printStackTrace();
-//    }
-//    Common.close(pStmt);
-//    Common.close(conn);
-//    }
+ // 6. 일지 삭제
+public void DiaryDelete(String petName, String petDiary) {
+    System.out.printf("%s 의 일지를 삭제합니다.", petDiary);
+
+    String sql = " DELETE FROM PET_PAGE WHERE PET_NAME =? AND PET_DIARY =?";
+
+    try {
+        conn = Common.getConnection();
+        pStmt = conn.prepareStatement(sql);
+        pStmt.setString(1, petName);
+        pStmt.setString(2, petDiary);
+
+        pStmt.executeUpdate();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    Common.close(pStmt);
+    Common.close(conn);
+    }
 
 
 }

@@ -1,5 +1,6 @@
 package kh_miniProject;
 import kh_miniProject.dao.MemberDAO;
+import kh_miniProject.dao.ReplyDAO;
 import kh_miniProject.dao.WriteDAO;
 import kh_miniProject.vo.MemberVO;
 import kh_miniProject.vo.WriteVO;
@@ -11,6 +12,7 @@ public class JdbcMain {
     static Scanner sc = new Scanner(System.in);
     static MemberDAO mdao = new MemberDAO();
     static WriteDAO wdao = new WriteDAO();
+    static ReplyDAO rdao = new ReplyDAO();
     public static void main(String[] args) {
 
         System.out.println("[고양이 집사 커뮤니티]");
@@ -167,7 +169,7 @@ public class JdbcMain {
                 case 2 :
                     break;
                 case 3 :
-                    JdbcMain.petDiary(id);
+                    JdbcMain.petSelectInfo(id);
                 case 4 :
                     JdbcMain.petMenu(id);
             }
@@ -197,7 +199,7 @@ public class JdbcMain {
         System.out.println("----------------------------------------------------------------------------");
         System.out.println("[선택 조회]를 선택하셨습니다.");
         while(true) {
-            System.out.print("[1] 반려묘 별 정보 확인 [2] 반려묘 별 일지 확인 [3] 이전 단계 : ");
+            System.out.print("[1] 반려묘 별 정보 확인 [2] 반려묘 별 일지 확인 [3] 날짜별 일지 확인 [4] 이전 단계 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
@@ -205,6 +207,8 @@ public class JdbcMain {
                 case 2 :
                     JdbcMain.petDailyDiary(id);
                 case 3 :
+                    JdbcMain.petDailyDiary(id);
+                case 4 :
                     JdbcMain.petAllInfo(id);
             }
         }
@@ -212,13 +216,13 @@ public class JdbcMain {
 
     public static boolean petDailyDiary(String id) { // 반려묘 별 일지 확인
         System.out.println("----------------------------------------------------------------------------");
-        System.out.println("[반려묘 별 일지 확인]을 선택하셨습니다.");
+        System.out.println("[날짜별 일지 확인]을 선택하셨습니다.");
         while(true) {
-            System.out.print("[1] 일지 수정 [2] 일지 삭제 [3] 이전 단계 : ");
+            System.out.print("[1] 날짜 선택 [2] 일지 추가 [3] 이전 단계 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
-                    break;
+                    JdbcMain.editPetDiary(id);
                 case 2 :
                     break;
                 case 3:
@@ -228,26 +232,8 @@ public class JdbcMain {
 
     }
 
-    public static boolean petDiary(String id) { // 날짜별 일지 확인
+    public static boolean editPetDiary(String id) { // 날짜 선택
         System.out.println("----------------------------------------------------------------------------");
-        System.out.println("[날짜별 일지 확인]");
-        while(true) {
-            System.out.print("[1] 날짜 선택 [2] 일지 추가 [3] 이전 단계 : ");
-            int sel = sc.nextInt();
-            switch(sel) {
-                case 1 :
-                    JdbcMain.editPetDiary(id);
-                case 2 :
-                    break;
-                case 3 :
-                    JdbcMain.petInfoInquire(id);
-            }
-        }
-    }
-
-    public static boolean editPetDiary(String id) {
-        System.out.println("----------------------------------------------------------------------------");
-        System.out.println("메뉴를 선택하세요.");
         while(true) {
             System.out.print("[1] 수정 [2] 삭제 [3] 이전 단계 : ");
             int sel = sc.nextInt();
@@ -257,7 +243,7 @@ public class JdbcMain {
                 case 2 :
                     break;
                 case 3 :
-                    JdbcMain.petDiary(id);
+                    JdbcMain.petDailyDiary(id);
             }
         }
     }
@@ -275,6 +261,12 @@ public class JdbcMain {
                     JdbcMain.wdao.viewPostList(list);
                     break;
                 case 2 :
+                    List<WriteVO> list2 = wdao.getEntireList();
+                    JdbcMain.wdao.viewPostList(list2);
+                    List<WriteVO> list3 = wdao.getSelectPost();
+                    JdbcMain.wdao.viewSelectPost(list3);
+                    JdbcMain.wdao.viewReply(list3);
+                    JdbcMain.replyMenu(id);
                     break;
                 case 3 :
                     wdao.writePost(id);
@@ -283,6 +275,20 @@ public class JdbcMain {
                     JdbcMain.boardSearchMenu(id);
                 case 5 :
                     JdbcMain.userMenu(id);
+            }
+        }
+    }
+
+    public static boolean replyMenu(String id) {
+        System.out.println("----------------------------------------------------------------------------");
+        while (true) {
+            System.out.print("[1] 댓글 작성 [2] 이전 단계 : ");
+            int sel = sc.nextInt();
+            switch (sel) {
+                case 1:
+                    rdao.rplWrite(id);
+                case 2:
+                    JdbcMain.boardMenu(id);
             }
         }
     }

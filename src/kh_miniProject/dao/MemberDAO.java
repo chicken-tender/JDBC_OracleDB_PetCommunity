@@ -451,10 +451,10 @@ public class MemberDAO {
                     JdbcMain.petAllInfo(loginId);
                     JdbcMain.petSelectInfo(loginId);
                     JdbcMain.petDailyDiary(loginId);
-                    JdbcMain.petDiary(loginId);
                     JdbcMain.boardMenu(loginId);
                     JdbcMain.boardSearchMenu(loginId);
                     JdbcMain.editPetDiary(loginId);
+                    JdbcMain.replyMenu(loginId);
                     return loginId;
                 } else {
                     match = true;

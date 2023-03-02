@@ -1,6 +1,7 @@
 package kh_miniProject.dao;
 import kh_miniProject.util.Common;
 import kh_miniProject.vo.BoardVO;
+import kh_miniProject.vo.ReplyVO;
 import kh_miniProject.vo.WriteVO;
 import java.sql.*;
 import java.util.ArrayList;
@@ -38,6 +39,26 @@ public class WriteDAO {
             System.out.println("제목 : " + e.getTitle());
             System.out.println("본문 : " + e.getBodyText());
             System.out.println("작성날짜 : " + e.getRegDate());
+            System.out.println("------------------------------");
+        }
+    }
+
+    // 게시글 선택 후 조회
+    public void viewSelectPost(List<WriteVO> list) {
+        for(WriteVO e : list) {
+            System.out.println("------------------------------");
+            System.out.println("글번호 : " + e.getBoardNum());
+            System.out.println("작성자 : " + e.getId());
+            System.out.println("제목 : " + e.getTitle());
+            System.out.println("본문 : " + e.getBodyText());
+            System.out.println("------------------------------");
+        }
+    }
+    // 게시글 댓글 조회
+    public void viewReply(List<WriteVO> list) {
+        for(WriteVO e : list) {
+            System.out.println("댓글 사용자 : " + e.getrUserId());
+            System.out.println("댓글 : " + e.getReplyWrite());
             System.out.println("------------------------------");
         }
     }
@@ -363,25 +384,31 @@ public class WriteDAO {
     }
 
     // 게시글 선택하여 조회(댓글 포함) - 하는중
-    public List<WriteVO> viewSelectPost() {
+    public List<WriteVO> getSelectPost() {
+        System.out.print("조회할 글 번호 입력 : ");
+        int selectNum = sc.nextInt();
         List<WriteVO> list = new ArrayList<>();
         try {
             conn = Common.getConnection();
             stmt = conn.createStatement();
-            String sql = "SELECT BOARD_NUM, BOARD_NAME, USER_ID, TITLE, REG_DATE FROM WRITE ORDER BY REG_DATE DESC";
-            rs = stmt.executeQuery(sql);
+            String sql = "SELECT W.BOARD_NUM, W.USER_ID, TITLE, BODY_TEXT, R.USER_ID, REPLY_WRITE " +
+                    "FROM WRITE W, REPLY R WHERE W.BOARD_NUM = R.BOARD_NUM AND W.BOARD_NUM = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, selectNum);
+            rs = pstmt.executeQuery();
 
             while(rs.next()) {
                 int boardNum = rs.getInt("BOARD_NUM");
-                String boardName = rs.getString("BOARD_NAME");
                 String id = rs.getString("USER_ID");
                 String title = rs.getString("TITLE");
-                Date date = rs.getDate("REG_DATE");
-                WriteVO vo = new WriteVO(boardNum, boardName, id, title, date);
+                String bodyText = rs.getString("BODY_TEXT");
+                String rUserId = rs.getString("USER_ID");
+                String reply = rs.getString("REPLY_WRITE");
+                WriteVO vo = new WriteVO(boardNum, id, title, bodyText, rUserId, reply);
                 list.add(vo);
             }
             Common.close(rs);
-            Common.close(stmt);
+            Common.close(pstmt);
             Common.close(conn);
         } catch(Exception e) {
             e.printStackTrace();
