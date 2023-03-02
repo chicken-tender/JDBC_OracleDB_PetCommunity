@@ -104,6 +104,34 @@ public class WriteDAO {
         return list;
     }
 
+    // 게시글 조회(댓글 제외)
+    public List<WriteVO> getPostExtractReply(int num) {
+        List<WriteVO> list = new ArrayList<>();
+        try {
+            conn = Common.getConnection();
+            stmt = conn.createStatement();
+            String sql = "SELECT * FROM WRITE WHERE BOARD_NUM = " + num + " ORDER BY REG_DATE DESC";
+            rs = stmt.executeQuery(sql);
+
+            while(rs.next()) {
+                int boardNum = rs.getInt("BOARD_NUM");
+                String boardName = rs.getString("BOARD_NAME");
+                String id = rs.getString("USER_ID");
+                String title = rs.getString("TITLE");
+                String bodyText = rs.getString("BODY_TEXT");
+                Date date = rs.getDate("REG_DATE");
+                WriteVO vo = new WriteVO(boardNum, boardName, title, bodyText, date, id);
+                list.add(vo);
+            }
+            Common.close(rs);
+            Common.close(stmt);
+            Common.close(conn);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     // 게시판 선택 -> 해당 게시판 글 목록 불러오기
     public List<WriteVO> getSelectBoardList() {
         BoardDAO bdao = new BoardDAO();
@@ -383,29 +411,29 @@ public class WriteDAO {
         Common.close(conn);
     }
 
-    // 게시글 선택하여 조회(댓글 포함) - 하는중
-    public List<WriteVO> getSelectPost() {
-        System.out.print("조회할 글 번호 입력 : ");
-        int selectNum = sc.nextInt();
-        List<WriteVO> list = new ArrayList<>();
+    // 게시글 선택하여 조회(댓글 포함)
+    public List<WriteVO> getSelectPost(int num) {
+        List<WriteVO> list = null;
         try {
             conn = Common.getConnection();
             stmt = conn.createStatement();
             String sql = "SELECT W.BOARD_NUM, W.USER_ID, TITLE, BODY_TEXT, R.USER_ID, REPLY_WRITE " +
                     "FROM WRITE W, REPLY R WHERE W.BOARD_NUM = R.BOARD_NUM AND W.BOARD_NUM = ?";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, selectNum);
+            pstmt.setInt(1, num);
             rs = pstmt.executeQuery();
-
-            while(rs.next()) {
-                int boardNum = rs.getInt("BOARD_NUM");
-                String id = rs.getString("USER_ID");
-                String title = rs.getString("TITLE");
-                String bodyText = rs.getString("BODY_TEXT");
-                String rUserId = rs.getString("USER_ID");
-                String reply = rs.getString("REPLY_WRITE");
-                WriteVO vo = new WriteVO(boardNum, id, title, bodyText, rUserId, reply);
-                list.add(vo);
+            if (rs.next()) {
+                list = new ArrayList<>();
+                while(rs.next()) {
+                    int boardNum = rs.getInt("BOARD_NUM");
+                    String id = rs.getString("USER_ID");
+                    String title = rs.getString("TITLE");
+                    String bodyText = rs.getString("BODY_TEXT");
+                    String rUserId = rs.getString("USER_ID");
+                    String reply = rs.getString("REPLY_WRITE");
+                    WriteVO vo = new WriteVO(boardNum, id, title, bodyText, rUserId, reply);
+                    list.add(vo);
+                }
             }
             Common.close(rs);
             Common.close(pstmt);
@@ -414,5 +442,12 @@ public class WriteDAO {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public int selectBoardNum() {
+        System.out.print("조회할 글 번호 입력 : ");
+        int selectNum = sc.nextInt();
+
+        return selectNum;
     }
 }
