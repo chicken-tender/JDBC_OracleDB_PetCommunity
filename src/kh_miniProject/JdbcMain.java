@@ -10,8 +10,7 @@ public class JdbcMain {
     static MemberDAO mdao = new MemberDAO();
     static WriteDAO wdao = new WriteDAO();
     public static void main(String[] args) {
-//        List<WriteVO> w = wdao.getPeriodSearchList();
-//        Practice.wdao.preViewBodyTextList(w);
+
         System.out.println("[고양이 집사 커뮤니티]");
         int rst = mainMenu();
         if(rst == 1) {
@@ -63,6 +62,7 @@ public class JdbcMain {
     }
 
     public static boolean myPage(String id) {
+        System.out.println("----------------------------------------------------------------------------");
         System.out.println("[" + id + "] 님의 마이 페이지");
         System.out.println("메뉴를 선택하세요.");
         while (true) {
@@ -88,7 +88,28 @@ public class JdbcMain {
         }
     }
 
+    public static boolean editMyInfo(String id) {
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("[" + id + "] 님의 정보 수정");
+        System.out.println("메뉴를 선택하세요.");
+        while(true) {
+            System.out.print("[1] 이메일 변경 [2] 비밀번호 변경 [3] 아이디 변경 [4] 이전 단계 : ");
+            int sel = sc.nextInt();
+            switch(sel) {
+                case 1 :
+                    break;
+                case 2 :
+                    break;
+                case 3 :
+                    break;
+                case 4 :
+                    JdbcMain.myPage(id);
+            }
+        }
+    }
+
     public static boolean myPostPage(String id) {
+        System.out.println("----------------------------------------------------------------------------");
         System.out.println("[" + id + "] 님의 작성글");
         List<WriteVO> list = wdao.getMyPostList(id);
         JdbcMain.wdao.viewPost(list);
@@ -111,11 +132,11 @@ public class JdbcMain {
         }
     }
 
-    public static boolean petMenu (String id) {
+    public static boolean petMenu (String id) { // 펫 페이지!!!
+        System.out.println("----------------------------------------------------------------------------");
         System.out.println("[" + id + "] 님의 펫 페이지");
-        System.out.println("메뉴를 선택하세요.");
         while(true) {
-            System.out.print("[1] 반려묘 정보 조회 [2] 반려묘 추가 [3] 반려묘 정보 수정 [4] 이전 단계 [5] 종료 : ");
+            System.out.print("[1] 반려묘 조회 [2] 반려묘 추가 등록 [3] 반려묘 정보 수정 [4] 이전 단계 [5] 종료 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
@@ -132,28 +153,30 @@ public class JdbcMain {
         }
     }
 
-    public static boolean petInfoInquire(String id) { // 반려묘 정보 조회
-        System.out.println("[반려묘 정보 조회]");
-        System.out.println("메뉴를 선택하세요.");
+    public static boolean petInfoInquire(String id) { // 반려묘 조회
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("[반려묘 조회]를 선택하셨습니다.");
         while(true) {
-            System.out.print("[1] 반려묘 정보 확인 [2] 반려묘 일지 확인 [3] 이전 단계 : ");
+            System.out.print("[1] 전체 정보 확인 [2] 전체 일지 확인 [3] 선택 조회 [4] 이전 단계 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
-                    break;
+                    JdbcMain.petAllInfo(id);
                 case 2 :
                     break;
                 case 3 :
+                    JdbcMain.petDiary(id);
+                case 4 :
                     JdbcMain.petMenu(id);
             }
         }
     }
 
-    public static boolean petInfoQuery(String id) { // 반려묘 정보 확인
-        System.out.println("[반려묘 정보 확인]");
-        System.out.println("메뉴를 선택하세요.");
+    public static boolean petAllInfo(String id) { // 반려묘 전체 정보
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("[전체 정보 확인]을 선택하셨습니다.");
         while(true) {
-            System.out.print("[1] 조회할 반려묘 이름 입력 [2] 정보 수정 [3] 삭제 [4] 이전 단계 : ");
+            System.out.print("[1] 반려묘 전체 정보 [2] 반려묘 전체 일지 [3] 선택 조회 [4] 이전 단계 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
@@ -161,18 +184,53 @@ public class JdbcMain {
                 case 2 :
                     break;
                 case 3 :
-                    break;
+                    JdbcMain.petSelectInfo(id);
                 case 4 :
                     JdbcMain.petInfoInquire(id);
             }
         }
     }
 
-    public static boolean petDiary(String id) { // 반려묘 일지 확인
-        System.out.println("[반려묘 일지 확인]");
-        System.out.println("메뉴를 선택하세요.");
+    public static boolean petSelectInfo(String id) { // 반려묘 선택 조회
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("[선택 조회]를 선택하셨습니다.");
         while(true) {
-            System.out.print("[1] 날짜 선택 [2] 일지 추가 [3] 이전 단계 [4] 종료 : ");
+            System.out.print("[1] 반려묘 별 정보 확인 [2] 반려묘 별 일지 확인 [3] 이전 단계 : ");
+            int sel = sc.nextInt();
+            switch(sel) {
+                case 1 :
+                    break;
+                case 2 :
+                    JdbcMain.petDailyDiary(id);
+                case 3 :
+                    JdbcMain.petAllInfo(id);
+            }
+        }
+    }
+
+    public static boolean petDailyDiary(String id) { // 반려묘 별 일지 확인
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("[반려묘 별 일지 확인]을 선택하셨습니다.");
+        while(true) {
+            System.out.print("[1] 일지 수정 [2] 일지 삭제 [3] 이전 단계 : ");
+            int sel = sc.nextInt();
+            switch(sel) {
+                case 1 :
+                    break;
+                case 2 :
+                    break;
+                case 3:
+                    JdbcMain.petSelectInfo(id);
+            }
+        }
+
+    }
+
+    public static boolean petDiary(String id) { // 날짜별 일지 확인
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("[날짜별 일지 확인]");
+        while(true) {
+            System.out.print("[1] 날짜 선택 [2] 일지 추가 [3] 이전 단계 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
@@ -180,14 +238,13 @@ public class JdbcMain {
                 case 2 :
                     break;
                 case 3 :
-                    JdbcMain.petInfoQuery(id);
-                case 4 :
-                    System.exit(0);
+                    JdbcMain.petInfoInquire(id);
             }
         }
     }
 
     public static boolean boardMenu(String id) {
+        System.out.println("----------------------------------------------------------------------------");
         System.out.println("[게시판 보기]를 선택하셨습니다.");
         System.out.println("메뉴를 선택하세요.");
         while (true) {
@@ -212,6 +269,7 @@ public class JdbcMain {
     }
 
     public static boolean boardSearchMenu(String id) {
+        System.out.println("----------------------------------------------------------------------------");
         System.out.println("[검색]을 선택하셨습니다.");
         System.out.println("메뉴를 선택하세요.");
         while(true) {
@@ -241,10 +299,34 @@ public class JdbcMain {
     }
 
     public static boolean adminMenu() {
+        System.out.println("----------------------------------------------------------------------------");
         System.out.println("[관리자 페이지]");
         System.out.println("메뉴를 선택하세요.");
         while(true) {
-            System.out.print("[1] 전체 회원정보 조회 [2] 특정 회원정보 조회 [3] 이전 단계 : ");
+            System.out.print("[1] 전체 회원정보 [2] 특정 회원정보 조회 [3] 특정 날짜 가입 인원 조회 [4] 회원 삭제 [5] 이전 단계 : ");
+            int sel = sc.nextInt();
+            switch(sel) {
+                case 1 :
+                    break;
+                case 2 :
+                    JdbcMain.adminSelectMember();
+                case 3 :
+                    break;
+                case 4 :
+                    break;
+                case 5 :
+                    JdbcMain.mainMenu();
+            }
+        }
+    }
+
+    public static boolean adminSelectMember() {
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("[특정 회원 정보 조회]");
+        System.out.println("메뉴를 선택하세요.");
+        while(true) {
+            System.out.print("[1] 특정 회원 전체 정보 [2] 특정 회원 가입일 [3] 특정 회원 아이디 [4] 특정 회원 비밀번호 " +
+                    "[5] 특정 회원 가입일 [6] 이전 단계 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
@@ -252,7 +334,13 @@ public class JdbcMain {
                 case 2 :
                     break;
                 case 3 :
-                    JdbcMain.mainMenu();
+                    break;
+                case 4 :
+                    break;
+                case 5 :
+                    break;
+                case 6 :
+                    JdbcMain.adminMenu();
             }
         }
     }
