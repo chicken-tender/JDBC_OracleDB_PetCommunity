@@ -270,6 +270,7 @@ public class JdbcMain {
                         JdbcMain.replyMenu(id);
                     } else {
                         JdbcMain.wdao.viewPost(list4);
+                        JdbcMain.replyMenu(id);
                     }
                     break;
                 case 3 :
