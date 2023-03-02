@@ -6,13 +6,18 @@ public class ReplyVO {
     private String id;
     private int boardNum;
 
-    public ReplyVO() { }
+    public ReplyVO() {}
 
     public ReplyVO(int replyNum, String replyWrite, String id, int boardNum) {
         this.replyWrite = replyWrite;
         this.replyNum = replyNum;
         this.id = id;
         this.boardNum = boardNum;
+    }
+
+    public ReplyVO(String id, String replyWrite) {
+        this.id = id;
+        this.replyWrite = replyWrite;
     }
 
     public int getReplyNum() {

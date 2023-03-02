@@ -444,13 +444,17 @@ public class MemberDAO {
                     loginId = e.getId();
                     JdbcMain.userMenu(loginId);
                     JdbcMain.myPage(loginId);
+                    JdbcMain.editMyInfo(loginId);
+                    JdbcMain.myPostPage(loginId);
                     JdbcMain.petMenu(loginId);
                     JdbcMain.petInfoInquire(loginId);
-                    JdbcMain.petInfoQuery(loginId);
-                    JdbcMain.petDiary(loginId);
+                    JdbcMain.petAllInfo(loginId);
+                    JdbcMain.petSelectInfo(loginId);
+                    JdbcMain.petDailyDiary(loginId);
                     JdbcMain.boardMenu(loginId);
-                    JdbcMain.myPostPage(loginId);
                     JdbcMain.boardSearchMenu(loginId);
+                    JdbcMain.editPetDiary(loginId);
+                    JdbcMain.replyMenu(loginId);
                     return loginId;
                 } else {
                     match = true;
