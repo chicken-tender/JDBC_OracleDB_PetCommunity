@@ -1,8 +1,6 @@
 package kh_miniProject.dao;
 import kh_miniProject.util.Common;
-import kh_miniProject.vo.MemberVO;
 import kh_miniProject.vo.PetPageVO;
-import kh_miniProject.vo.PetVO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class PetPageDao {
+public class PetPageDAO {
     Connection conn = null;
     Statement stmt = null;
     PreparedStatement pStmt = null;
@@ -111,7 +109,7 @@ public class PetPageDao {
         }
     }
 
-// 3. 날짜 별 일지 확인
+// 3. 날짜별 모든 일지 확인
 public List<PetPageVO> petDiarySelect(String userId) {
     List<PetPageVO> list = new ArrayList<>();
 
@@ -156,8 +154,53 @@ public List<PetPageVO> petDiarySelect(String userId) {
             System.out.println("--------------------------");
         }
     }
+    // 4. 날짜별 개별 반려묘 일지 확인
+    public List<PetPageVO> petDiarySelectName(String userId) {
+        List<PetPageVO> list = new ArrayList<>();
 
-// 4. 일지 추가
+        String sql = "SELECT *" +
+                "FROM PETPAGE" +
+                "WHERE PET_DIARY = ?, PET_NAME = ?" +
+                "ORDER BY PET_NAME";
+
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, userId);
+            rs = pStmt.executeQuery(sql);
+
+            while (rs.next()) {
+                String petName = rs.getString("PET_NAME");
+                Date petDiary = rs.getDate("PET_DIARY");
+                String petImg = rs.getString("PET_IMG");
+                String petWalk = rs.getString("PET_WALK");
+                String petMedi = rs.getString("PET_MEDI");
+                PetPageVO vo = new PetPageVO(petName, petDiary, petImg, petWalk, petMedi);
+
+                list.add(vo);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(rs);
+        Common.close(pStmt);
+        Common.close(conn);
+        return list;
+    }
+
+    public void petDiarySelectNamePrint(List<PetPageVO> list) {
+        for (PetPageVO e : list) {
+            System.out.println("날짜 : " + e.getPetDiary());
+            System.out.println("고양이 이름 : " + e.getPetName());
+            System.out.println(e.getPetIMG());
+            System.out.println("산책 여부 : " + e.getPetWalk());
+            System.out.println("약 복용 여부 : " + e.getPetMedi());
+            System.out.println("--------------------------");
+        }
+    }
+
+// 5. 일지 추가
 public void uploadPetDiary(String Id) {
     System.out.println("반려묘 일지를 추가합니다.");
     System.out.print("이름 : ");
@@ -188,7 +231,7 @@ public void uploadPetDiary(String Id) {
     Common.close(conn);
 }
 
-// 5. 일지 수정
+// 6. 일지 수정
 public void editPetDiary() {
 
     System.out.print("변경 할 일지 날짜 입력 (yyyy/mm/dd) : ");
@@ -218,7 +261,7 @@ public void editPetDiary() {
     Common.close(conn);
 }
 
- // 6. 일지 삭제
+ // 7. 일지 삭제
 public void DiaryDelete(String petName, String petDiary) {
     System.out.printf("%s 의 일지를 삭제합니다.", petDiary);
 
