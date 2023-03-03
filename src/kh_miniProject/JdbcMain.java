@@ -120,14 +120,7 @@ public class JdbcMain {
                     mdao.pwUpdate(id);
                     break;
                 case 3 :
-<<<<<<< HEAD
                     myPage(id);
-=======
-                    mdao.idUpdate(id);
-                    break;
-                case 4 :
-                    JdbcMain.myPage(id);
->>>>>>> 837d5fe39301dfdac3b3b0e7a539a1315f1fd10b
             }
         }
     }
