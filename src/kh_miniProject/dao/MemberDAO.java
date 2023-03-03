@@ -376,13 +376,13 @@ public class MemberDAO {
     // 비밀번호 변경
     public void pwUpdate(String id){
         System.out.print("변경할 비밀번호를 입력하세요. : ");
-        String pw = sc.next();
+        String pwd = sc.next();
 
-        String sql = "UPDATE MEMBER SET PW = ? WHERE USER_ID = ?";
+        String sql = "UPDATE MEMBER SET USER_PW = ? WHERE USER_ID = ?";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
-            pStmt.setString(1, pw);
+            pStmt.setString(1, pwd);
             pStmt.setString(2, id);
             pStmt.executeUpdate();
         }catch (Exception e) {
