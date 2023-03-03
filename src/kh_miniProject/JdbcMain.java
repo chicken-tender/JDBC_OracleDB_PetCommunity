@@ -53,7 +53,7 @@ public class JdbcMain {
         System.out.println("로그인이 완료되었습니다.");
         System.out.println("메뉴를 선택하세요.");
         while(true) {
-            System.out.print("[1] 마이페이지 [2] 펫 페이지 [3] 게시판 보기 [4] 종료 : ");
+            System.out.print("[1] 마이페이지 [2] 펫 페이지 [3] 게시판 보기 [4] 로그아웃 [5] 종료 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
@@ -63,6 +63,8 @@ public class JdbcMain {
                 case 3 :
                     boardMenu(id);
                 case 4 :
+                    mainMenu();
+                case 5 :
                     System.exit(0);
             }
         }
