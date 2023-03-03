@@ -1,10 +1,6 @@
 package kh_miniProject;
-import kh_miniProject.dao.MemberDAO;
-import kh_miniProject.dao.ReplyDAO;
-import kh_miniProject.dao.WriteDAO;
-import kh_miniProject.vo.MemberVO;
-import kh_miniProject.vo.ReplyVO;
-import kh_miniProject.vo.WriteVO;
+import kh_miniProject.dao.*;
+import kh_miniProject.vo.*;
 
 import java.net.IDN;
 import java.util.List;
@@ -15,6 +11,11 @@ public class JdbcMain {
     static MemberDAO mdao = new MemberDAO();
     static WriteDAO wdao = new WriteDAO();
     static ReplyDAO rdao = new ReplyDAO();
+    static PetDAO pdao = new PetDAO();
+    static PetPageDAO ppdao = new PetPageDAO();
+    static String UserId;
+    static String petName;
+    static String petDiary;
     public static void main(String[] args) {
 
         System.out.println("[고양이 집사 커뮤니티]");
@@ -155,18 +156,22 @@ public class JdbcMain {
         System.out.println("----------------------------------------------------------------------------");
         System.out.println("[" + id + "] 님의 펫 페이지");
         while(true) {
-            System.out.print("[1] 반려묘 조회 [2] 반려묘 추가 등록 [3] 반려묘 정보 수정 [4] 이전 단계 [5] 종료 : ");
+            System.out.print("[1] 반려묘 조회 [2] 반려묘 추가 등록 [3] 반려묘 정보 수정 [4] 반려묘 정보 삭제 [5] 이전 단계 [6] 종료 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
                     JdbcMain.petInfoInquire(id);
                 case 2 :
+                    pdao.enrollPet(id);
                     break;
                 case 3 :
+                    pdao.editPetInfo(petName);
                     break;
                 case 4 :
-                    JdbcMain.userMenu(id);
+                    pdao.PetDelete();
                 case 5 :
+                    JdbcMain.userMenu(id);
+                case 6 :
                     System.exit(0);
             }
         }
@@ -189,24 +194,50 @@ public class JdbcMain {
         }
     }
 
+//    public static boolean editpetInfo(String id) {
+//        System.out.println("[반려묘 정보 수정]을 선택하셨습니다.");
+//        System.out.println("변경을 원하는 반려묘 이름을 입력하세요 : ");
+//        String etName = sc.next();
+//        while(true) {
+//            System.out.print("[1] 이름 변경  [2] 성별 변경 [3] 생년월일 변경 [4] 종 변경  [5] 이전 단계로: ");
+//            int sel = sc.nextInt();
+//            switch(sel) {
+//                case 1 :
+//                    break;
+//                case 2 :
+//                    break;
+//                case 3 :
+//                    break;
+//                case 4 :
+//                    break;
+//                case 5 :
+//                    JdbcMain.petMenu(id);
+//            }
+//        }
+//    }
+
+    /* 3/3 수민 - 수정 필요 */
     public static boolean petAllInfo(String id) { // 반려묘 전체 정보
         System.out.println("----------------------------------------------------------------------------");
         System.out.println("[전체 정보 확인]을 선택하셨습니다.");
         while(true) {
-            System.out.print("[1] 반려묘 전체 정보 [2] 반려묘 전체 일지 [3] 선택 조회 [4] 이전 단계 : ");
+            System.out.print("[1] 전체 반려묘 정보 [2] 전체 반려묘 일지 [3] 이전 단계 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
+                    List<PetVO> list1 = pdao.petAll(id);
+                    JdbcMain.pdao.petAllPrint(list1);
                     break;
                 case 2 :
+                    List<PetPageVO> list2 = ppdao.petDiaryAll(id);
+                    JdbcMain.ppdao.petDiaryAllPrint(list2);
                     break;
                 case 3 :
-                    JdbcMain.petSelectInfo(id);
-                case 4 :
                     JdbcMain.petInfoInquire(id);
             }
         }
     }
+
 
     public static boolean petSelectInfo(String id) { // 반려묘 선택 조회
         System.out.println("----------------------------------------------------------------------------");
@@ -216,9 +247,11 @@ public class JdbcMain {
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
+                    pdao.petSelect(id);
                     break;
                 case 2 :
-                    JdbcMain.petDailyDiary(id);
+                    List<PetPageVO> list = ppdao.petSelect(id);
+                    JdbcMain.ppdao.petSelectPrint(list);
                 case 3 :
                     JdbcMain.petDailyDiary(id);
                 case 4 :
@@ -226,8 +259,7 @@ public class JdbcMain {
             }
         }
     }
-
-    public static boolean petDailyDiary(String id) { // 반려묘 별 일지 확인
+    public static boolean petSelectDiary(String id) { // 반려묘 별 일지 확인
         System.out.println("----------------------------------------------------------------------------");
         System.out.println("[날짜별 일지 확인]을 선택하셨습니다.");
         while(true) {
@@ -237,6 +269,27 @@ public class JdbcMain {
                 case 1 :
                     JdbcMain.editPetDiary(id);
                 case 2 :
+                    ppdao.uploadPetDiary(id);
+                    break;
+                case 3:
+                    JdbcMain.petSelectInfo(id);
+            }
+        }
+
+    }
+    public static boolean petDailyDiary(String id) { // 반려묘 별 일지 확인
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("[날짜별 일지 확인]을 선택하셨습니다.");
+        while(true) {
+            System.out.print("[1] 날짜 선택 [2] 일지 추가 [3] 이전 단계 : ");
+            int sel = sc.nextInt();
+            switch(sel) {
+                case 1 :
+                    List<PetPageVO> list = ppdao.petDiarySelectName(id);
+                    JdbcMain.ppdao.petDiarySelectNamePrint(list);
+                    JdbcMain.editPetDiary(id);
+                case 2 :
+                    ppdao.uploadPetDiary(id);
                     break;
                 case 3:
                     JdbcMain.petSelectInfo(id);
@@ -247,13 +300,20 @@ public class JdbcMain {
 
     public static boolean editPetDiary(String id) { // 날짜 선택
         System.out.println("----------------------------------------------------------------------------");
+        List<PetPageVO> list = ppdao.petDiarySelect(id);
+        JdbcMain.ppdao.petDiarySelectPrint(list);
+
+        ppdao.petDiarySelectName(id);
+
         while(true) {
             System.out.print("[1] 수정 [2] 삭제 [3] 이전 단계 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
+                    ppdao.editPetDiary();
                     break;
                 case 2 :
+                    ppdao.DiaryDelete(petName, petDiary);
                     break;
                 case 3 :
                     JdbcMain.petDailyDiary(id);

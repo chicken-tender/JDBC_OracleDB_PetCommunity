@@ -67,19 +67,22 @@ public class PetPageDAO {
     public List<PetPageVO> petSelect(String userId) {
         List<PetPageVO> list = new ArrayList<>();
 
+        System.out.print("조회를 원하는 반려묘 이름을 입력하세요 : ");
+        String petName = sc.next();
+
         String sql = "SELECT *" +
                 "FROM PETPAGE" +
-                "WHERE USER_ID = ?" +
+                "WHERE USER_ID = ?, PET_NAME = ?" +
                 "ORDER BY PET_DIARY, PET_NAME ASC";
 
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, userId);
+            pStmt.setString(2, petName);
             rs = pStmt.executeQuery(sql);
 
             while (rs.next()) {
-                String petName = rs.getString("PET_NAME");
                 Date petDiary = rs.getDate("PET_DIARY");
                 String petImg = rs.getString("PET_IMG");
                 String petWalk = rs.getString("PET_WALK");
@@ -109,40 +112,40 @@ public class PetPageDAO {
         }
     }
 
-// 3. 날짜별 모든 일지 확인
-public List<PetPageVO> petDiarySelect(String userId) {
-    List<PetPageVO> list = new ArrayList<>();
+    // 3. 날짜별 모든 일지 확인
+    public List<PetPageVO> petDiarySelect(String userId) {
+        List<PetPageVO> list = new ArrayList<>();
 
-    String sql = "SELECT *" +
-            "FROM PETPAGE" +
-            "WHERE PET_DIARY = ?" +
-            "ORDER BY PET_NAME";
+        String sql = "SELECT *" +
+                "FROM PETPAGE" +
+                "WHERE PET_DIARY = ?" +
+                "ORDER BY PET_NAME";
 
-    try {
-        conn = Common.getConnection();
-        pStmt = conn.prepareStatement(sql);
-        pStmt.setString(1, userId);
-        rs = pStmt.executeQuery(sql);
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, userId);
+            rs = pStmt.executeQuery(sql);
 
-        while (rs.next()) {
-            String petName = rs.getString("PET_NAME");
-            Date petDiary = rs.getDate("PET_DIARY");
-            String petImg = rs.getString("PET_IMG");
-            String petWalk = rs.getString("PET_WALK");
-            String petMedi = rs.getString("PET_MEDI");
-            PetPageVO vo = new PetPageVO(petName, petDiary, petImg, petWalk, petMedi);
+            while (rs.next()) {
+                String petName = rs.getString("PET_NAME");
+                Date petDiary = rs.getDate("PET_DIARY");
+                String petImg = rs.getString("PET_IMG");
+                String petWalk = rs.getString("PET_WALK");
+                String petMedi = rs.getString("PET_MEDI");
+                PetPageVO vo = new PetPageVO(petName, petDiary, petImg, petWalk, petMedi);
 
-            list.add(vo);
+                list.add(vo);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-    } catch (Exception e) {
-        e.printStackTrace();
+        Common.close(rs);
+        Common.close(pStmt);
+        Common.close(conn);
+        return list;
     }
-    Common.close(rs);
-    Common.close(pStmt);
-    Common.close(conn);
-    return list;
-}
 
     public void petDiarySelectPrint(List<PetPageVO> list) {
         for (PetPageVO e : list) {
@@ -200,87 +203,87 @@ public List<PetPageVO> petDiarySelect(String userId) {
         }
     }
 
-// 5. 일지 추가
-public void uploadPetDiary(String Id) {
-    System.out.println("반려묘 일지를 추가합니다.");
-    System.out.print("이름 : ");
-    String petName = sc.next();
-    System.out.print("사진 등록 : ");
-    String petImg = sc.next();
-    System.out.print("산책 여부 (Y/N): ");
-    String petWalk = sc.next();
-    System.out.print("약 복용 여부 (Y/N) : ");
-    String petMedi = sc.next();
 
-    String sql = "INSERT INTO PET VALUES(?,?,sysdate,?,?,?)";
+    // 5. 일지 추가
+    public void uploadPetDiary(String Id) {
+        System.out.println("반려묘 일지를 추가합니다.");
+        System.out.print("이름 : ");
+        String petName = sc.next();
+        System.out.print("사진 등록 : ");
+        String petImg = sc.next();
+        System.out.print("산책 여부 (Y/N): ");
+        String petWalk = sc.next();
+        System.out.print("약 복용 여부 (Y/N) : ");
+        String petMedi = sc.next();
 
-    try {
-        conn = Common.getConnection();
-        pStmt = conn.prepareStatement(sql);
-        pStmt.setString(1, Id);
-        pStmt.setString(2, petName);
-        pStmt.setString(3, petImg);
-        pStmt.setString(4, petWalk);
-        pStmt.setString(5, petMedi);
-        int ret = pStmt.executeUpdate();
-        System.out.println("반려묘 일지 등록이 완료되었습니다..");
-    } catch (Exception e) {
-        e.printStackTrace();
+        String sql = "INSERT INTO PET VALUES(?,?,sysdate,?,?,?)";
+
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, Id);
+            pStmt.setString(2, petName);
+            pStmt.setString(3, petImg);
+            pStmt.setString(4, petWalk);
+            pStmt.setString(5, petMedi);
+            int ret = pStmt.executeUpdate();
+            System.out.println("반려묘 일지 등록이 완료되었습니다..");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
     }
-    Common.close(pStmt);
-    Common.close(conn);
+
+    // 6. 일지 수정
+    public void editPetDiary() {
+
+        System.out.print("변경 할 일지 날짜 입력 (yyyy/mm/dd) : ");
+        String petDiary = sc.next();
+        System.out.print("변경 할 이미지 : ");
+        String petImg = sc.next();
+        System.out.print("산책 여부 (Y/N): ");
+        String petWalk = sc.next();
+        System.out.print("약 복용 여부 (Y/N) : ");
+        String petMedi = sc.next();
+
+        String sql = "UPDATE PET_PAGE SET PET_IMG = ?, PET_WALK = ?, PET_MEDI = ? WHERE PET_DIARY = ?";
+
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, petImg);
+            pStmt.setString(2, petWalk);
+            pStmt.setString(3, petMedi);
+            pStmt.setString(4, petDiary);
+            pStmt.executeUpdate();
+            System.out.println("반려묘 정보 수정이 완료되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
+    }
+
+    // 7. 일지 삭제
+    public void DiaryDelete(String petName, String petDiary) {
+        System.out.printf("%s 의 일지를 삭제합니다.", petDiary);
+
+        String sql = " DELETE FROM PET_PAGE WHERE PET_NAME =? AND PET_DIARY =?";
+
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, petName);
+            pStmt.setString(2, petDiary);
+
+            pStmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
+    }
+
+
 }
-
-// 6. 일지 수정
-public void editPetDiary() {
-
-    System.out.print("변경 할 일지 날짜 입력 (yyyy/mm/dd) : ");
-    String petDiary = sc.next();
-    System.out.print("변경 할 이미지 : ");
-    String petImg = sc.next();
-    System.out.print("산책 여부 (Y/N): ");
-    String petWalk = sc.next();
-    System.out.print("약 복용 여부 (Y/N) : ");
-    String petMedi = sc.next();
-
-    String sql = "UPDATE PET_PAGE SET PET_IMG = ?, PET_WALK = ?, PET_MEDI = ? WHERE PET_DIARY = ?";
-
-    try {
-        conn = Common.getConnection();
-        pStmt = conn.prepareStatement(sql);
-        pStmt.setString(1, petImg);
-        pStmt.setString(2, petWalk);
-        pStmt.setString(3, petMedi);
-        pStmt.setString(4, petDiary);
-        pStmt.executeUpdate();
-        System.out.println("반려묘 정보 수정이 완료되었습니다.");
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    Common.close(pStmt);
-    Common.close(conn);
-}
-
- // 7. 일지 삭제
-public void DiaryDelete(String petName, String petDiary) {
-    System.out.printf("%s 의 일지를 삭제합니다.", petDiary);
-
-    String sql = " DELETE FROM PET_PAGE WHERE PET_NAME =? AND PET_DIARY =?";
-
-    try {
-        conn = Common.getConnection();
-        pStmt = conn.prepareStatement(sql);
-        pStmt.setString(1, petName);
-        pStmt.setString(2, petDiary);
-
-        pStmt.executeUpdate();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    Common.close(pStmt);
-    Common.close(conn);
-    }
-
-
-}
-

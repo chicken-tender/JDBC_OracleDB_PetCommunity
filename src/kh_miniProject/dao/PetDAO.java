@@ -40,7 +40,7 @@ public class PetDAO {
             pStmt.setString(3, petGender);
             pStmt.setString(4, petBday);
             pStmt.setString(5, petSpec);
-            int ret = pStmt.executeUpdate();
+            pStmt.executeUpdate();
             System.out.println("반려묘 등록이 완료되었습니다..");
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,10 +50,10 @@ public class PetDAO {
     }
 
     // 2. 반려묘 정보 수정
-    public void editPetInfo() {
+    public void editPetInfo(String petName) {
 
         System.out.print("정보를 변경 할 반려묘 이름 입력 : ");
-        String petName = sc.next();
+        String petOName = sc.next();
         System.out.print("변경 할 성별 (F/M) : ");
         String petGender = sc.next();
         System.out.print("변경 할 생년월일 (yyyy/mm/dd) : ");
@@ -70,7 +70,7 @@ public class PetDAO {
             pStmt.setString(2, petGender);
             pStmt.setString(3, petBday);
             pStmt.setString(4, petSpec);
-            pStmt.setString(5, petName);
+            pStmt.setString(5, petOName);
             pStmt.executeUpdate();
             System.out.println("반려묘 정보 수정이 완료되었습니다.");
         } catch (Exception e) {
