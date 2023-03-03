@@ -79,8 +79,8 @@ public class JdbcMain {
             switch(sel) {
                 case 1 :
                     List<MemberVO> list = mdao.memMY();
-                    int cnt = mdao.rplSelect();
-                    mdao.memMYPrint(list, cnt);
+                    int petCnt = mdao.rplSelect(id);
+                    mdao.memMYPrint(list, petCnt);
                     break;
                 case 2 :
                     JdbcMain.editMyInfo(id);

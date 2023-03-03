@@ -414,20 +414,22 @@ public class MemberDAO {
     }
 
     // 반려동물 유무 (0마리 일 때, 예비 집사 / 1마리 이상일 때, 집사) - 수정
-    public int rplSelect() {
-        int cnt = 0;
-        String sql = "SELECT COUNT(PET_NAME) AS cnt, M.USER_ID" +
-                " FROM MEMBER M LEFT OUTER JOIN PET P" +
-                " ON M.USER_ID = P.USER_ID" +
-                " GROUP BY M.USER_ID" +
-                " ORDER BY USER_ID";
-
-        try { conn = Common.getConnection();
+    public int rplSelect(String userId) {
+        List<MemberVO> list = new ArrayList<>();
+        int c = 0;
+        try {
+            conn = Common.getConnection();
+            stmt = conn.createStatement();
+            String sql = "SELECT COUNT(PET_NAME) AS CNT, M.USER_ID FROM MEMBER M LEFT OUTER JOIN PET P " +
+                    "ON M.USER_ID = P.USER_ID GROUP BY M.USER_ID HAVING M.USER_ID = ?";
             pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1,userId);
             rs = pStmt.executeQuery();
 
             while (rs.next()) {
-                cnt = rs.getInt("cnt");
+                int cnt = rs.getInt("CNT");
+                MemberVO vo = new MemberVO(cnt);
+                list.add(vo);
             }
 
         } catch (Exception e) {
@@ -436,7 +438,10 @@ public class MemberDAO {
         Common.close(rs);
         Common.close(pStmt);
         Common.close(conn);
-        return cnt;
+        for(MemberVO e : list) {
+            c = e.getCnt();
+        }
+        return c;
     }
 
     public void rplSelectPrint(int cnt) {

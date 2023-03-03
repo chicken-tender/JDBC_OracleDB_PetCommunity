@@ -9,6 +9,7 @@ public class MemberVO {
     private String mail;
     private String phone;
     private Date joinDate;
+    private int cnt;
 
     public MemberVO(String id, String pw, String name, String mail, String phone, Date joinDate) {
         this.id = id;
@@ -17,6 +18,10 @@ public class MemberVO {
         this.mail = mail;
         this.phone = phone;
         this.joinDate = joinDate;
+    }
+
+    public MemberVO(int cnt) {
+        this.cnt = cnt;
     }
 
     public MemberVO(String id, String pw, String name, String mail, String phone) {
@@ -35,6 +40,15 @@ public class MemberVO {
     public MemberVO() {
 
     }
+
+    public int getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(int cnt) {
+        this.cnt = cnt;
+    }
+
     public String getId() {
         return id;
     }
