@@ -1,27 +1,24 @@
 package kh_miniProject.vo;
-import java.sql.Date;
 
 public class PetVO {
     private String petName;
     private String id;
     private String petGender;
-    private Date petBday;
+    private String petBday;
     private String petSpec;
 
-    public PetVO(String petName, String id, String petGender, Date petBday, String petSpec) {
+    public PetVO(String petName, String petBday) {
+        this.petName = petName;
+        this.petBday = petBday;
+
+    }
+    public PetVO(String petName, String id, String petGender, String petBday, String petSpec) {
         this.petName = petName;
         this.id = id;
         this.petGender = petGender;
         this.petBday = petBday;
         this.petSpec = petSpec;
     }
-    public PetVO(String petName, String id, String petGender, String petSpec) {
-        this.petName = petName;
-        this.id = id;
-        this.petGender = petGender;
-        this.petSpec = petSpec;
-    }
-
 
     public String getPetName() {
         return petName;
@@ -47,11 +44,11 @@ public class PetVO {
         this.petGender = petGender;
     }
 
-    public Date getPetBday() {
+    public String getPetBday() {
         return petBday;
     }
 
-    public void setPetBday(Date petBday) {
+    public void setPetBday(String petBday) {
         this.petBday = petBday;
     }
 
@@ -63,5 +60,3 @@ public class PetVO {
         this.petSpec = petSpec;
     }
 }
-
-

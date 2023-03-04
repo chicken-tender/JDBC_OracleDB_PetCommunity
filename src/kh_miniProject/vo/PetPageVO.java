@@ -1,27 +1,34 @@
 package kh_miniProject.vo;
-import java.sql.Date;
-
 
 public class PetPageVO {
     private String id;
     private String petName;
-    private Date petDiary;
+    private String petDiary;
     private String petIMG;
+    private String petMemo;
     private String petWalk;
     private String  petMedi;
 
-    public PetPageVO(String petName, Date petDiary, String petIMG, String petWalk, String petMedi) {
+    public PetPageVO(String petName, String petDiary, String petWalk, String petMedi) {
         this.petName = petName;
         this.petDiary = petDiary;
-        this.petIMG = petIMG;
         this.petWalk = petWalk;
         this.petMedi = petMedi;
     }
-    public PetPageVO(String id, String petName, Date petDiary, String petIMG, String petWalk, String petMedi) {
-        this.id = id;
+
+    public PetPageVO(String petDiary, String petIMG, String petMemo, String petWalk, String petMedi) {
+        this.petDiary = petDiary;
+        this.petIMG = petIMG;
+        this.petMemo = petMemo;
+        this.petWalk = petWalk;
+        this.petMedi = petMedi;
+    }
+
+    public PetPageVO(String petName, String petDiary, String petIMG, String petMemo, String petWalk, String petMedi) {
         this.petName = petName;
         this.petDiary = petDiary;
         this.petIMG = petIMG;
+        this.petMemo = petMemo;
         this.petWalk = petWalk;
         this.petMedi = petMedi;
     }
@@ -42,11 +49,11 @@ public class PetPageVO {
         this.petName = petName;
     }
 
-    public Date getPetDiary() {
+    public String getPetDiary() {
         return petDiary;
     }
 
-    public void setPetDiary(Date petDiary) {
+    public void setPetDiary(String petDiary) {
         this.petDiary = petDiary;
     }
 
@@ -56,6 +63,14 @@ public class PetPageVO {
 
     public void setPetIMG(String petIMG) {
         this.petIMG = petIMG;
+    }
+
+    public String getPetMemo() {
+        return petMemo;
+    }
+
+    public void setPetMemo(String petMemo) {
+        this.petMemo = petMemo;
     }
 
     public String getPetWalk() {
@@ -74,4 +89,3 @@ public class PetPageVO {
         this.petMedi = petMedi;
     }
 }
-
