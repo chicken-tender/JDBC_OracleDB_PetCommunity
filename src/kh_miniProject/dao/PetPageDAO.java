@@ -175,7 +175,7 @@ public class PetPageDAO {
 
 
 
-    // 4. 날짜별 개별 반려묘 일지 확인
+    // 5. 날짜별 개별 반려묘 일지 확인
     public List<PetPageVO> petDiarySelectName(String userId) {
         List<PetPageVO> list = new ArrayList<>();
 
@@ -219,7 +219,7 @@ public class PetPageDAO {
     }
 
 
-    // 5. 일지 추가
+    // 6. 일지 추가
     public void uploadPetDiary(String userId) {
         System.out.println("반려묘 일지를 추가합니다.");
         System.out.print("반려묘 이름 : ");
@@ -260,7 +260,7 @@ public class PetPageDAO {
         Common.close(conn);
     }
 
-    // 6. 일지 수정
+    // 7. 일지 수정
     public void editPetDiary(String petDiary) {
 
         System.out.print("일지를 수정 할 반려묘 선택 : ");
@@ -297,7 +297,7 @@ public class PetPageDAO {
         Common.close(conn);
     }
 
-    // 7. 일지 삭제
+    // 8. 일지 삭제
     public void DiaryDelete(String petDiary) {
         System.out.print("일지를 삭제 할 반려묘 선택 : ");
         String petName = sc.next();
