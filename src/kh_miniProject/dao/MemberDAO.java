@@ -2,9 +2,7 @@ package kh_miniProject.dao;
 import kh_miniProject.JdbcMain;
 import kh_miniProject.util.Common;
 import kh_miniProject.vo.MemberVO;
-import kh_miniProject.vo.ReplyVO;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -151,16 +149,22 @@ public class MemberDAO {
     }
 
     // 특정 날짜 가입 인원 조회
-    public int specificJoinDateCount() {
+    public List<Map<String, String>> specificJoinDateCount() {
+        List<Map<String,String>> list = null;
         String sql = " SELECT JOIN_DATE, COUNT(*) cnt FROM MEMBER GROUP BY JOIN_DATE ";
         int cnt = 0;
         try {
+            list = new ArrayList<>();
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             rs = pStmt.executeQuery(sql);
             while (rs.next()) {
                 cnt = rs.getInt("cnt");
-                MemberVO vo = new MemberVO();
+                java.sql.Date JOIN_DATE = rs.getDate("JOIN_DATE");
+                Map<String, String> vo = new HashMap<String, String>();
+                vo.put("JOIN_DATE", String.valueOf(JOIN_DATE));
+                vo.put("cnt", String.valueOf(cnt));
+                list.add(vo);
             }
 
         }catch (Exception e) {
@@ -169,12 +173,15 @@ public class MemberDAO {
         Common.close(rs);
         Common.close(pStmt);
         Common.close(conn);
-        return cnt;
+        return list;
     }
 
-    public void specificJoinDateCountPrint(int cnt) {
-        System.out.println("가입 인원 :" + cnt);
-        System.out.println("----------------------");
+    public void specificJoinDateCountPrint(List<Map<String,String>> list) {
+            for (Map<String, String> e : list) {
+                System.out.println("가입 날짜 : " + e.get("JOIN_DATE") + "  가입 인원 :" + e.get("cnt"));
+                System.out.println("----------------------");
+            }
+
     }
 
     // 특정 회원정보 조회

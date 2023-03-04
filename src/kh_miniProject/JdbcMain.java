@@ -425,8 +425,8 @@ public class JdbcMain {
                 case 2 :
                     adminSelectMember();
                 case 3 :
-                    int cnt = mdao.specificJoinDateCount();
-                    mdao.specificJoinDateCountPrint(cnt);
+                    List<Map<String,String>> list1 = mdao.specificJoinDateCount();
+                    mdao.specificJoinDateCountPrint(list1);
                     break;
                 case 4 :
                     mdao.memDelete();
