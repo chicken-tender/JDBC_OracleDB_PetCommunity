@@ -393,25 +393,6 @@ public class MemberDAO {
         Common.close(conn);
     }
 
-    // 아이디 변경
-    public void idUpdate(String id){
-        System.out.print("변경할 아이디를 입력하세요. : ");
-        String updateId = sc.next();
-
-        String sql = "UPDATE MEMBER SET USER_ID = ? WHERE USER_ID = ?";
-        try {
-            conn = Common.getConnection();
-            pStmt = conn.prepareStatement(sql);
-            pStmt.setString(1, updateId);
-            pStmt.setString(2, id);
-            pStmt.executeUpdate();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("변경 완료");
-        Common.close(pStmt);
-        Common.close(conn);
-    }
 
     // 반려동물 유무 (0마리 일 때, 예비 집사 / 1마리 이상일 때, 집사) - 수정
     public int rplSelect(String userId) {

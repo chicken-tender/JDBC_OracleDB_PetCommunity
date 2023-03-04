@@ -110,7 +110,7 @@ public class JdbcMain {
         System.out.println("[" + id + "] 님의 정보 수정");
         System.out.println("메뉴를 선택하세요.");
         while(true) {
-            System.out.print("[1] 이메일 변경 [2] 비밀번호 변경 [3] 아이디 변경 [4] 이전 단계 : ");
+            System.out.print("[1] 이메일 변경 [2] 비밀번호 변경 [3] 이전 단계 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
@@ -120,9 +120,6 @@ public class JdbcMain {
                     mdao.pwUpdate(id);
                     break;
                 case 3 :
-                    mdao.idUpdate(id);
-                    break;
-                case 4 :
                     JdbcMain.myPage(id);
             }
         }
