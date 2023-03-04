@@ -21,11 +21,11 @@ public class JdbcMain {
         System.out.println("[고양이 집사 커뮤니티]");
         int rst = mainMenu();
         if(rst == 1) {
-            List<MemberVO> mlist = JdbcMain.mdao.getLogInInfo();
-            String loginUser = JdbcMain.mdao.login(mlist);
-            JdbcMain.userMenu(loginUser);
+            List<MemberVO> mlist = mdao.getLogInInfo();
+            String loginUser = mdao.login(mlist);
+            userMenu(loginUser);
         }
-        else JdbcMain.adminMenu();
+        else adminMenu();
     }
 
     public static int mainMenu() {
@@ -53,16 +53,18 @@ public class JdbcMain {
         System.out.println("로그인이 완료되었습니다.");
         System.out.println("메뉴를 선택하세요.");
         while(true) {
-            System.out.print("[1] 마이페이지 [2] 펫 페이지 [3] 게시판 보기 [4] 종료 : ");
+            System.out.print("[1] 마이페이지 [2] 펫 페이지 [3] 게시판 보기 [4] 로그아웃 [5] 종료 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
-                    JdbcMain.myPage(id);
+                    myPage(id);
                 case 2 :
-                    JdbcMain.petMenu(id);
+                    petMenu(id);
                 case 3 :
-                    JdbcMain.boardMenu(id);
+                    boardMenu(id);
                 case 4 :
+                    mainMenu();
+                case 5 :
                     System.exit(0);
             }
         }
@@ -83,10 +85,10 @@ public class JdbcMain {
                     mdao.memMYPrint(list, petCnt);
                     break;
                 case 2 :
-                    JdbcMain.editMyInfo(id);
+                    editMyInfo(id);
                     break;
                 case 3 :
-                    JdbcMain.myPostPage(id);
+                    myPostPage(id);
                 case 4 :
                     List<Map<String,String>> list1 = rdao.rplSelect(id);
                     rdao.rplSelectPrint(list1);
@@ -98,7 +100,7 @@ public class JdbcMain {
                     }
                     break;
                 case 6 :
-                    JdbcMain.userMenu(id);
+                    userMenu(id);
                 case 7 :
                     System.exit(0);
             }
@@ -110,7 +112,7 @@ public class JdbcMain {
         System.out.println("[" + id + "] 님의 정보 수정");
         System.out.println("메뉴를 선택하세요.");
         while(true) {
-            System.out.print("[1] 이메일 변경 [2] 비밀번호 변경 [3] 아이디 변경 [4] 이전 단계 : ");
+            System.out.print("[1] 이메일 변경 [2] 비밀번호 변경 [3] 이전 단계 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
@@ -120,10 +122,7 @@ public class JdbcMain {
                     mdao.pwUpdate(id);
                     break;
                 case 3 :
-                    mdao.idUpdate(id);
-                    break;
-                case 4 :
-                    JdbcMain.myPage(id);
+                    myPage(id);
             }
         }
     }
@@ -147,7 +146,7 @@ public class JdbcMain {
                     wdao.deleteMyPost(id);
                     break;
                 case 4 :
-                    JdbcMain.myPage(id);
+                    myPage(id);
             }
         }
     }
@@ -160,7 +159,7 @@ public class JdbcMain {
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
-                    JdbcMain.petInfoInquire(id);
+                    petInfoInquire(id);
                 case 2 :
                     pdao.enrollPet(id);
                     break;
@@ -170,7 +169,7 @@ public class JdbcMain {
                 case 4 :
                     pdao.PetDelete();
                 case 5 :
-                    JdbcMain.userMenu(id);
+                    userMenu(id);
                 case 6 :
                     System.exit(0);
             }
@@ -185,11 +184,11 @@ public class JdbcMain {
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
-                    JdbcMain.petAllInfo(id);
+                    petAllInfo(id);
                 case 2 :
-                    JdbcMain.petSelectInfo(id);
+                    petSelectInfo(id);
                 case 3 :
-                    JdbcMain.petMenu(id);
+                    petMenu(id);
             }
         }
     }
@@ -226,14 +225,14 @@ public class JdbcMain {
             switch(sel) {
                 case 1 :
                     List<PetVO> list1 = pdao.petAll(id);
-                    JdbcMain.pdao.petAllPrint(list1);
+                    pdao.petAllPrint(list1);
                     break;
                 case 2 :
                     List<PetPageVO> list2 = ppdao.petDiaryAll(id);
-                    JdbcMain.ppdao.petDiaryAllPrint(list2);
+                    ppdao.petDiaryAllPrint(list2);
                     break;
                 case 3 :
-                    JdbcMain.petInfoInquire(id);
+                    petInfoInquire(id);
             }
         }
     }
@@ -251,11 +250,11 @@ public class JdbcMain {
                     break;
                 case 2 :
                     List<PetPageVO> list = ppdao.petSelect(id);
-                    JdbcMain.ppdao.petSelectPrint(list);
+                    ppdao.petSelectPrint(list);
                 case 3 :
-                    JdbcMain.petDailyDiary(id);
+                    petDailyDiary(id);
                 case 4 :
-                    JdbcMain.petAllInfo(id);
+                    petAllInfo(id);
             }
         }
     }
@@ -267,12 +266,12 @@ public class JdbcMain {
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :
-                    JdbcMain.editPetDiary(id);
+                    editPetDiary(id);
                 case 2 :
                     ppdao.uploadPetDiary(id);
                     break;
                 case 3:
-                    JdbcMain.petSelectInfo(id);
+                    petSelectInfo(id);
             }
         }
 
@@ -286,13 +285,13 @@ public class JdbcMain {
             switch(sel) {
                 case 1 :
                     List<PetPageVO> list = ppdao.petDiarySelectName(id);
-                    JdbcMain.ppdao.petDiarySelectNamePrint(list);
-                    JdbcMain.editPetDiary(id);
+                    ppdao.petDiarySelectNamePrint(list);
+                    editPetDiary(id);
                 case 2 :
                     ppdao.uploadPetDiary(id);
                     break;
                 case 3:
-                    JdbcMain.petSelectInfo(id);
+                    petSelectInfo(id);
             }
         }
 
@@ -301,7 +300,7 @@ public class JdbcMain {
     public static boolean editPetDiary(String id) { // 날짜 선택
         System.out.println("----------------------------------------------------------------------------");
         List<PetPageVO> list = ppdao.petDiarySelect(id);
-        JdbcMain.ppdao.petDiarySelectPrint(list);
+        ppdao.petDiarySelectPrint(list);
 
         ppdao.petDiarySelectName(id);
 
@@ -316,7 +315,7 @@ public class JdbcMain {
                     ppdao.DiaryDelete(petName, petDiary);
                     break;
                 case 3 :
-                    JdbcMain.petDailyDiary(id);
+                    petDailyDiary(id);
             }
         }
     }
@@ -331,30 +330,30 @@ public class JdbcMain {
             switch (sel) {
                 case 1 :
                     List<WriteVO> list = wdao.getSelectBoardList();
-                    JdbcMain.wdao.viewPostList(list);
+                    wdao.viewPostList(list);
                     break;
                 case 2 :
                     List<WriteVO> list2 = wdao.getEntireList();
-                    JdbcMain.wdao.viewPostList(list2);
+                    wdao.viewPostList(list2);
                     int num = wdao.selectBoardNum();
                     List<WriteVO> list3 = wdao.getSelectPost(num);
                     List<WriteVO> list4 = wdao.getPostExtractReply(num);
                     if(list3 != null) {
-                        JdbcMain.wdao.viewSelectPost(list3);
-                        JdbcMain.wdao.viewReply(list3);
-                        JdbcMain.replyMenu(id);
+                        wdao.viewSelectPost(list3);
+                        wdao.viewReply(list3);
+                        replyMenu(id);
                     } else {
-                        JdbcMain.wdao.viewPost(list4);
-                        JdbcMain.replyMenu(id);
+                        wdao.viewPost(list4);
+                        replyMenu(id);
                     }
                     break;
                 case 3 :
                     wdao.writePost(id);
                     break;
                 case 4 :
-                    JdbcMain.boardSearchMenu(id);
+                    boardSearchMenu(id);
                 case 5 :
-                    JdbcMain.userMenu(id);
+                    userMenu(id);
             }
         }
     }
@@ -375,7 +374,7 @@ public class JdbcMain {
                     rdao.rplDelete();
                     break;
                 case 4:
-                    JdbcMain.boardMenu(id);
+                    boardMenu(id);
                     break;
             }
         }
@@ -391,22 +390,22 @@ public class JdbcMain {
             switch(sel) {
                 case 1 :
                     List<WriteVO> list2 = wdao.getTitleSearchList();
-                    JdbcMain.wdao.viewPostList(list2);
+                    wdao.viewPostList(list2);
                     break;
                 case 2 :
                     List<WriteVO> list3 = wdao.getBodyTextSearchList();
-                    JdbcMain.wdao.preViewBodyTextList(list3);
+                    wdao.preViewBodyTextList(list3);
                     break;
                 case 3 :
                     List<WriteVO> list4 = wdao.getPeriodSearchList();
-                    JdbcMain.wdao.preViewBodyTextList(list4);
+                    wdao.preViewBodyTextList(list4);
                     break;
                 case 4 :
                     List<WriteVO> list5 = wdao.getIdSearchList();
-                    JdbcMain.wdao.preViewBodyTextList(list5);
+                    wdao.preViewBodyTextList(list5);
                     break;
                 case 5 :
-                    JdbcMain.boardMenu(id);
+                    boardMenu(id);
             }
         }
     }
@@ -424,7 +423,7 @@ public class JdbcMain {
                     mdao.memAllPrint(list);
                     break;
                 case 2 :
-                    JdbcMain.adminSelectMember();
+                    adminSelectMember();
                 case 3 :
                     int cnt = mdao.specificJoinDateCount();
                     mdao.specificJoinDateCountPrint(cnt);
@@ -433,7 +432,7 @@ public class JdbcMain {
                     mdao.memDelete();
                     break;
                 case 5 :
-                    JdbcMain.mainMenu();
+                    mainMenu();
             }
         }
     }
@@ -467,7 +466,7 @@ public class JdbcMain {
                     List<ReplyVO> list4 = rdao.rplUserWrite();
                     rdao.rplUserWritePrint(list4);
                 case 6 :
-                    JdbcMain.adminMenu();
+                    adminMenu();
             }
         }
     }

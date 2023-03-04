@@ -358,7 +358,7 @@ public class MemberDAO {
         System.out.print("변경할 이메일을 입력하세요. : ");
         String email = sc.next();
 
-        String sql = " UPDATE MEMBER SET EMAIL = ? WHERE USER_ID = ? ";
+        String sql = "UPDATE MEMBER SET EMAIL = ? WHERE USER_ID = ?";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
