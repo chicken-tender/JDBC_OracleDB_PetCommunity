@@ -172,7 +172,7 @@ public class WriteDAO {
         List<WriteVO> list = new ArrayList<>();
         System.out.print("검색할 ID : ");
         String id = sc.nextLine();
-        String sql = "SELECT BOARD_NUM, BOARD_NAME, TITLE, BODY_TEXT, REG_DATE FROM WRITE WHERE USER_ID = ? " +
+        String sql = "SELECT BOARD_NUM, BOARD_NAME, USER_ID, TITLE, BODY_TEXT, REG_DATE FROM WRITE WHERE USER_ID = ? " +
                 "ORDER BY REG_DATE DESC";
         try {
             conn = Common.getConnection();
@@ -183,10 +183,11 @@ public class WriteDAO {
             while(rs.next()) {
                 int boardNum = rs.getInt("BOARD_NUM");
                 String boardName = rs.getString("BOARD_NAME");
+                String userId = rs.getString("USER_ID");
                 String title = rs.getString("TITLE");
                 String bodyText = rs.getString("BODY_TEXT");
                 Date date = rs.getDate("REG_DATE");
-                WriteVO vo = new WriteVO(boardNum, boardName, title, date, bodyText);
+                WriteVO vo = new WriteVO(boardNum, boardName, title,bodyText,date,userId);
                 list.add(vo);
             }
             Common.close(rs);

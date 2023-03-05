@@ -117,10 +117,10 @@ public class ReplyDAO {
 
     //3. 내가 작성한 글에 달린 댓글 확인 - String 으로 받아오는 방식
     public List<ReplyVO> rplMyWrite(String id){
-        List<ReplyVO> list = null;
+        List<ReplyVO> list = new ArrayList<>();
         //List<ReplyVO> list = new ArrayList<>();
 
-        String sql = " SELECT REPLY_WRITE " +
+        String sql = " SELECT REPLY_NUM, USER_ID, REPLY_WRITE " +
                 " FROM REPLY " +
                 " WHERE BOARD_NUM = (SELECT BOARD_NUM " +
                 " FROM WRITE " +
@@ -130,15 +130,14 @@ public class ReplyDAO {
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1,id);
             rs = pStmt.executeQuery();
-            if(rs.next()) {
-                list = new ArrayList<>();
-                while (rs.next()) {
-                    String replyWrite = rs.getString("REPLY_WRITE");
-                    ReplyVO vo = new ReplyVO();
-                    vo.setReplyWrite(replyWrite);
-                    list.add(vo);
-                }
+            while (rs.next()) {
+                int replyNum = rs.getInt("REPLY_NUM");
+                String userId = rs.getString("USER_ID");
+                String replyWrite = rs.getString("REPLY_WRITE");
+                ReplyVO vo = new ReplyVO(replyNum, userId, replyWrite);
+                list.add(vo);
             }
+
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -146,6 +145,14 @@ public class ReplyDAO {
         Common.close(pStmt);
         Common.close(conn);
         return list;
+    }
+    public void viewReply(List<ReplyVO> list) {
+        for(ReplyVO e : list) {
+            System.out.println("댓글 번호 : " + e.getReplyNum());
+            System.out.println("댓글 사용자 : " + e.getId());
+            System.out.println("댓글 : " + e.getReplyWrite());
+            System.out.println("------------------------------");
+        }
     }
 
     public String rplMyWritePrint() {
@@ -284,5 +291,6 @@ public class ReplyDAO {
         Common.close(pStmt);
         Common.close(conn);
     }
-
 }
+
+

@@ -95,9 +95,9 @@ public class JdbcMain {
                     break;
                 case 5 :
                     List<ReplyVO> list2 = rdao.rplMyWrite(id);
-                    if(list2 == null) {
-                        System.out.println(rdao.rplMyWritePrint());
-                    }
+                    if(list2 != null) {
+                        rdao.viewReply(list2);
+                    }else System.out.println(rdao.rplMyWritePrint());
                     break;
                 case 6 :
                     userMenu(id);
@@ -395,7 +395,7 @@ public class JdbcMain {
         System.out.println("[검색]을 선택하셨습니다.");
         System.out.println("메뉴를 선택하세요.");
         while(true) {
-            System.out.print("[1] 제목 검색 [2] 본문 검색 [3] 특정 기간 검색 [4] 작성자 검색 [5] 이전 단계 : ");
+            System.out.print("[1] 제목 전체 조회 [2] 본문 검색 [3] 특정 기간 검색 [4] 작성자 검색 [5] 이전 단계 : ");
             int sel = sc.nextInt();
             switch(sel) {
                 case 1 :

@@ -20,6 +20,12 @@ public class ReplyVO {
         this.replyWrite = replyWrite;
     }
 
+    public ReplyVO(int replyNum, String id, String replyWrite) {
+        this.replyNum = replyNum;
+        this.id = id;
+        this.replyWrite = replyWrite;
+    }
+
     public int getReplyNum() {
         return replyNum;
     }
